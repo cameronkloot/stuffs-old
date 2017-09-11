@@ -1,13 +1,20 @@
 <template>
   <div>
-    <h2>Main</h2>
+    <Clips></Clips>
   </div>
 </template>
 
 <script>
+import Clips from '@/components/Clips'
+
 const name = 'main'
 
+const components = {
+  Clips
+}
+
 export default {
-  name
+  name,
+  components
 }
 </script>
