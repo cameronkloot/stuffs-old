@@ -3,7 +3,7 @@
     <input
       id="command-text"
       type="text"
-      placeholder="What's up?">
+      placeholder="Type here...">
     </input>
   </div>
 </template>
