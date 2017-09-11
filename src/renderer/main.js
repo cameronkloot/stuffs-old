@@ -14,6 +14,10 @@ if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
+// Prevent items from being dragged to chromium
+document.addEventListener('dragover', event => event.preventDefault())
+document.addEventListener('drop', event => event.preventDefault())
+
 /* eslint-disable no-new */
 new Vue({
   components: { App },
