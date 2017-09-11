@@ -17,6 +17,8 @@ module.exports = {
     'html'
   ],
   rules: {
+    'space-before-function-paren': ['error', 'always'],
+    'no-unused-vars': 1,
     'comma-dangle': [2, 'never'],
     'no-console': 1,
     'arrow-parens': 1,
