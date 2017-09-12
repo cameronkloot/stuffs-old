@@ -9,7 +9,7 @@ const state = {
 
 const mutations = {
   [types.ADD_CLIP] (currentState, clip) {
-    const clips = [...currentState.clips, clip]
+    const clips = [clip, ...currentState.clips]
     currentState.clips = clips
   },
   [types.REMOVE_CLIP] (currentState, clip) {

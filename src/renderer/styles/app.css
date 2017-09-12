@@ -8,6 +8,10 @@ html * {
   box-sizing: border-box;
 }
 
+html {
+  background-color: #2F3133;
+}
+
 body {
   font-family: 'Roboto Mono', monospace;
   color: #DADDD8;
@@ -34,20 +38,65 @@ input {
   color: #DADDD8;
 }
 
+button {
+  outline: none;
+  border: none;
+  background-color: transparent;
+  color: #9C9990;
+  font-size: 0.75rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #4c4340;
+}
+
 #app {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #2F3133;
 }
-
 
 /* Clips */
 
-#command-text {
+#clips {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+#clips .header {
+  position: relative;
+  /* height: 100px; */
+}
+
+#clips .command {
   display: block;
   width: 100%;
   padding: 1.5rem;
   font-size: 1.25rem;
   border-bottom: 1px solid #4c4340;
+}
+
+#clips .add {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#clips .clips-container {
+  overflow: scroll;
+  flex: 1;
+}
+
+#clips .clip {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #4c4340;
+  display: flex;
+}
+
+#clips .clip .text {
+  align-self: flex-start;
 }

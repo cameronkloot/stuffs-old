@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <Clips></Clips>
-  </div>
+  <Clips></Clips>
 </template>
 
 <script>
