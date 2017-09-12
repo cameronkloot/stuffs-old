@@ -1,7 +1,8 @@
 <template>
   <div id="clips">
     <div class="header">
-      <input class="command"
+      <input autofocus
+        class="command"
         ref="command"
         type="text"
         placeholder="Type here..."
@@ -32,6 +33,11 @@
 import { mapActions, mapGetters } from 'vuex'
 import Clip from './Clips/Clip'
 
+const DIRECTIONS = {
+  UP: 'UP',
+  DOWN: 'DOWN'
+}
+
 const name = 'clips'
 
 const computed = {
@@ -56,25 +62,34 @@ const methods = {
     this.remove(clip)
   },
   keydownSelectClips ($event) {
-    if ($event.key !== 'ArrowUp' && $event.key !== 'ArrowDown') {
-      return
+    let direction = null
+    if ($event.key === 'Tab') {
+      $event.preventDefault()
+      $event.stopPropagation()
+      direction = $event.shiftKey === true ? DIRECTIONS.UP : DIRECTIONS.DOWN
+    } else if ($event.key === 'ArrowUp') {
+      direction = DIRECTIONS.UP
+    } else if ($event.key === 'ArrowDown') {
+      direction = DIRECTIONS.DOWN
     }
 
-    // Increment/decrement selection
-    if ($event.key === 'ArrowUp' && this.selected > -1) {
-      this.setSelected(this.selected - 1)
-    } else if ($event.key === 'ArrowDown' && this.selected < this.list.length - 1) {
-      this.setSelected(this.selected + 1)
-    }
+    if (direction === DIRECTIONS.UP || direction === DIRECTIONS.DOWN) {
+      // Increment/decrement selection
+      if (direction === DIRECTIONS.UP && this.selected > -1) {
+        this.setSelected(this.selected - 1)
+      } else if (direction === DIRECTIONS.DOWN && this.selected < this.list.length - 1) {
+        this.setSelected(this.selected + 1)
+      }
 
-    if (this.selected === -1) {
-      // Focus on command input
-      this.$refs.command.focus()
-    } else {
-      this.$refs.command.blur()
-    }
+      // Focus in/out on command input
+      if (this.selected === -1) {
+        this.$refs.command.focus()
+      } else {
+        this.$refs.command.blur()
+      }
 
-    this.scrollListToSelected()
+      this.scrollListToSelected()
+    }
   },
   scrollListToSelected () {
     if (this.selected > -1) {
