@@ -6,7 +6,8 @@ import * as types from '../mutation-types'
 const namespaced = true
 
 const state = {
-  list: []
+  list: [],
+  selected: -1
 }
 
 const mutations = {
@@ -17,6 +18,9 @@ const mutations = {
   [types.REMOVE_CLIP] (currentState, clip) {
     const list = _.reject(currentState.list, clip)
     currentState.list = list
+  },
+  [types.SET_SELECTED_INDEX] (currentState, index) {
+    currentState.selected = index
   }
 }
 
@@ -29,12 +33,18 @@ const actions = {
   },
   remove ({ commit }, clip) {
     commit(types.REMOVE_CLIP, clip)
+  },
+  setSelected ({ commit }, index) {
+    commit(types.SET_SELECTED_INDEX, index)
   }
 }
 
 const getters = {
   list (currentState) {
     return currentState.list
+  },
+  selected (currentState) {
+    return currentState.selected
   }
 }
 

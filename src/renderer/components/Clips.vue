@@ -7,7 +7,7 @@
         placeholder="Type here..."
         v-model="command"
         @keydown.enter="clickAddClip"
-        @focus="selected = -1">
+        @focus="setSelected(-1)">
       </input>
       <button class="add"
         v-show="command.length > 0"
@@ -35,13 +35,14 @@ import Clip from './Clips/Clip'
 const name = 'clips'
 
 const computed = {
-  ...mapGetters('clips', ['list'])
+  ...mapGetters('clips', ['list', 'selected'])
 }
 
 const methods = {
   ...mapActions('clips', [
     'add',
-    'remove'
+    'remove',
+    'setSelected'
   ]),
   clickAddClip () {
     if (this.command.trim().length > 0) {
@@ -60,10 +61,10 @@ const methods = {
     }
 
     // Increment/decrement selection
-    if ($event.key === 'ArrowUp') {
-      this.selected = this.selected > -1 ? this.selected - 1 : -1
-    } else if ($event.key === 'ArrowDown') {
-      this.selected = this.selected < this.list.length - 1 ? this.selected + 1 : this.selected
+    if ($event.key === 'ArrowUp' && this.selected > -1) {
+      this.setSelected(this.selected - 1)
+    } else if ($event.key === 'ArrowDown' && this.selected < this.list.length - 1) {
+      this.setSelected(this.selected + 1)
     }
 
     if (this.selected === -1) {
@@ -101,8 +102,7 @@ export default {
   components,
   data () {
     return {
-      command: '',
-      selected: -1
+      command: ''
     }
   },
   mounted () {
