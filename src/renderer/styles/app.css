@@ -100,3 +100,14 @@ button:hover {
 #clips .clip .text {
   align-self: flex-start;
 }
+
+::-webkit-scrollbar {
+  background-color: #2F3133;
+   width: 4px;
+  height: 0;
+}
+
+::-webkit-scrollbar-thumb:window-inactive,
+::-webkit-scrollbar-thumb {
+  background-color: #4c4340;
+}
