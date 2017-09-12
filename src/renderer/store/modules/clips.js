@@ -3,37 +3,43 @@ import uuidv4 from 'uuid/v4'
 
 import * as types from '../mutation-types'
 
+const namespaced = true
+
 const state = {
-  clips: []
+  list: []
 }
 
 const mutations = {
   [types.ADD_CLIP] (currentState, clip) {
-    const clips = [clip, ...currentState.clips]
-    currentState.clips = clips
+    const list = [clip, ...currentState.list]
+    currentState.list = list
   },
   [types.REMOVE_CLIP] (currentState, clip) {
-    const clips = _.reject(currentState.clips, clip)
-    currentState.clips = clips
+    const list = _.reject(currentState.list, clip)
+    currentState.list = list
   }
 }
 
 const actions = {
-  addClip ({ commit }, clip) {
-    commit(types.ADD_CLIP, clip)
+  add ({ commit }, clip) {
+    commit(types.ADD_CLIP, {
+      id: uuidv4(),
+      ...clip
+    })
   },
-  removeClip ({ commit }, clip) {
+  remove ({ commit }, clip) {
     commit(types.REMOVE_CLIP, clip)
   }
 }
 
 const getters = {
-  clips (currentState) {
-    return currentState.clips
+  list (currentState) {
+    return currentState.list
   }
 }
 
 export default {
+  namespaced,
   state,
   mutations,
   actions,

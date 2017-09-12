@@ -17,7 +17,7 @@
     </div>
     <div class="clips-container" ref="list">
       <Clip
-        v-for="(clip, index) in clips"
+        v-for="(clip, index) in list"
         :key="clip.id"
         ref="clips"
         :selected="selected === index"
@@ -35,26 +35,24 @@ import Clip from './Clips/Clip'
 const name = 'clips'
 
 const computed = {
-  ...mapGetters([
-    'clips'
-  ])
+  ...mapGetters('clips', ['list'])
 }
 
 const methods = {
-  ...mapActions([
-    'addClip',
-    'removeClip'
+  ...mapActions('clips', [
+    'add',
+    'remove'
   ]),
   clickAddClip () {
     if (this.command.trim().length > 0) {
-      this.addClip({
+      this.add({
         text: this.command
       })
       this.command = ''
     }
   },
   clipRemove (clip) {
-    this.removeClip(clip)
+    this.remove(clip)
   },
   keydownSelectClips ($event) {
     if ($event.key !== 'ArrowUp' && $event.key !== 'ArrowDown') {
@@ -65,7 +63,7 @@ const methods = {
     if ($event.key === 'ArrowUp') {
       this.selected = this.selected > -1 ? this.selected - 1 : -1
     } else if ($event.key === 'ArrowDown') {
-      this.selected = this.selected < this.clips.length - 1 ? this.selected + 1 : this.selected
+      this.selected = this.selected < this.list.length - 1 ? this.selected + 1 : this.selected
     }
 
     if (this.selected === -1) {
@@ -77,12 +75,11 @@ const methods = {
       // Scroll to keep selected in view
       const command = this.$refs.command
       const list = this.$refs.list
-      console.log(this.$refs)
-      const clip = this.$refs.clips[this.selected]
+      const clip = this.$refs.clips[this.selected].$el
 
       let scrollTop = list.scrollTop
       if (clip.offsetTop + clip.offsetHeight >
-          list.scrollTop + list.offsetHeight + command.offsetHeight) {
+        list.scrollTop + list.offsetHeight + command.offsetHeight) {
         scrollTop += clip.offsetHeight
         list.scrollTop = scrollTop > list.scrollHeight ? list.scrollHeight : scrollTop
       } else if (clip.offsetTop < list.scrollTop + command.offsetHeight) {

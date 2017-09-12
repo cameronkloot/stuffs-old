@@ -98,6 +98,10 @@ button:hover {
   justify-content: space-between;
 }
 
+#clips .clip[data-selected="true"] {
+  background-color: #4c4340;
+}
+
 #clips .clip .text {
   align-self: flex-start;
 }
