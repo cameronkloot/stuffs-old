@@ -16,23 +16,21 @@
       </button>
     </div>
     <div class="clips-container" ref="list">
-      <div class="clip"
+      <Clip
         v-for="(clip, index) in clips"
         :key="clip.id"
         ref="clips"
-        :data-selected="selected === index"
-        :selected="selected === index">
-        <span class="text">{{ clip.text }}</span>
-        <span class="buttons">
-          <button class="remove" @click="clickRemoveClip(clip)">X</button>
-        </span>
-      </div>
+        :selected="selected === index"
+        :clip="clip"
+        @clip-remove="clipRemove">
+      </Clip>
     </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import Clip from './Clips/Clip'
 
 const name = 'clips'
 
@@ -55,7 +53,7 @@ const methods = {
       this.command = ''
     }
   },
-  clickRemoveClip (clip) {
+  clipRemove (clip) {
     this.removeClip(clip)
   },
   keydownSelectClips ($event) {
@@ -79,6 +77,7 @@ const methods = {
       // Scroll to keep selected in view
       const command = this.$refs.command
       const list = this.$refs.list
+      console.log(this.$refs)
       const clip = this.$refs.clips[this.selected]
 
       let scrollTop = list.scrollTop
@@ -94,10 +93,15 @@ const methods = {
   }
 }
 
+const components = {
+  Clip
+}
+
 export default {
   name,
   computed,
   methods,
+  components,
   data () {
     return {
       command: '',
