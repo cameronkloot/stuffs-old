@@ -17,6 +17,7 @@ module.exports = {
     'html'
   ],
   rules: {
+    'no-unused-vars': 1,
     'indent': 1,
     'space-before-function-paren': ['error', 'always'],
     'no-unused-vars': 1,
