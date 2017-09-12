@@ -1,7 +1,7 @@
 <template>
   <div id="clips">
     <div class="header">
-      <input autofocus
+      <input
         class="command"
         ref="command"
         type="text"
