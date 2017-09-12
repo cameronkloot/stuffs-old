@@ -5,7 +5,8 @@
         class="command"
         type="text"
         placeholder="Type here..."
-        v-model="command">
+        v-model="command"
+        @keyup.enter="clickAddClip">
       </input>
       <button class="add"
         v-show="command.length > 0"
@@ -16,6 +17,9 @@
     <div class="clips-container">
       <div v-for="clip in clips" :key="clip.id" class="clip">
         <span class="text">{{ clip.text }}</span>
+        <span class="buttons">
+          <button class="remove" @click="clickRemoveClip(clip)">X</button>
+        </span>
       </div>
     </div>
   </div>
@@ -34,13 +38,19 @@ const computed = {
 
 const methods = {
   ...mapActions([
-    'addClip'
+    'addClip',
+    'removeClip'
   ]),
   clickAddClip () {
-    this.addClip({
-      text: this.command
-    })
-    this.command = ''
+    if (this.command.trim().length > 0) {
+      this.addClip({
+        text: this.command
+      })
+      this.command = ''
+    }
+  },
+  clickRemoveClip (clip) {
+    this.removeClip(clip)
   }
 }
 
