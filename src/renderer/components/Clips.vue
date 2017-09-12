@@ -72,21 +72,17 @@ const methods = {
       this.$refs.command.focus()
     } else {
       this.$refs.command.blur()
+    }
 
+    this.scrollListToSelected()
+  },
+  scrollListToSelected () {
+    if (this.selected > -1) {
       // Scroll to keep selected in view
       const command = this.$refs.command
       const list = this.$refs.list
       const clip = this.$refs.clips[this.selected].$el
-
-      let scrollTop = list.scrollTop
-      if (clip.offsetTop + clip.offsetHeight >
-        list.scrollTop + list.offsetHeight + command.offsetHeight) {
-        scrollTop += clip.offsetHeight
-        list.scrollTop = scrollTop > list.scrollHeight ? list.scrollHeight : scrollTop
-      } else if (clip.offsetTop < list.scrollTop + command.offsetHeight) {
-        scrollTop -= clip.offsetHeight
-        list.scrollTop = scrollTop < 0 ? 0 : scrollTop
-      }
+      list.scrollTop = clip.offsetTop - command.offsetHeight
     }
   }
 }
@@ -107,6 +103,7 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
+      this.scrollListToSelected()
       window.addEventListener('keydown', this.keydownSelectClips)
     })
   },
