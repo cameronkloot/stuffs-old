@@ -127,6 +127,11 @@ button:hover {
   margin-bottom: 2px;
 }
 
+#clips .clip[data-selected="true"] .buttons .remove:hover {
+  color: #4c4340;
+  background-color: #9C9990;
+}
+
 ::-webkit-scrollbar {
   background-color: #2F3133;
    width: 4px;

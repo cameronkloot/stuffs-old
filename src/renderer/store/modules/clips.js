@@ -16,8 +16,9 @@ const mutations = {
     const list = [clip, ...currentState.list]
     currentState.list = list
   },
-  [types.REMOVE] (currentState, clip) {
-    const list = _.reject(currentState.list, clip)
+  [types.REMOVE] (currentState, { from, count }) {
+    const list = currentState.list
+    list.splice(from, count)
     currentState.list = list
   },
   [types.PROMOTE] (currentState, { from, count, to }) {
@@ -45,9 +46,9 @@ const actions = {
       ...clip
     })
   },
-  remove ({ state, dispatch, commit }, clip) {
-    commit(types.REMOVE, clip)
-    if (state.list.length > 0) {
+  remove ({ state, dispatch, commit }, { from, count }) {
+    commit(types.REMOVE, { from, count })
+    if (from === 0 && state.list.length > 0) {
       clipboard.writeText(state.list[0].text)
     } else {
       clipboard.clear()

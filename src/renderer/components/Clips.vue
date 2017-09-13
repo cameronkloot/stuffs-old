@@ -23,7 +23,7 @@
         ref="clips"
         :selected="selected === index"
         :clip="clip"
-        @clip-remove="clipRemove"
+        @clip-remove="clipRemove(index)"
         @clip-click="clipClick(index)">
       </Clip>
     </div>
@@ -74,8 +74,8 @@ const methods = {
       this.command = ''
     }
   },
-  clipRemove (clip) {
-    this.remove(clip)
+  clipRemove (index) {
+    this.remove({ from: index, count: 1 })
   },
   clipClick (index) {
     this.setSelected(index)
@@ -83,7 +83,7 @@ const methods = {
   keydownSelectClips ($event) {
     // Move to mixin
     if ($event.key === 'Backspace' && this.selected > -1) {
-      this.clipRemove(this.list[this.selected])
+      this.remove({ from: this.selected, count: 1 })
       return
     }
 

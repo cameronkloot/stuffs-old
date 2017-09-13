@@ -2,7 +2,7 @@
   <div class="clip" :data-selected="selected" @click="$emit('clip-click')">
     <span class="text truncate">{{ clip.text }}</span>
     <span class="buttons">
-      <button class="remove" @click="$emit('clip-remove', clip)">X</button>
+      <button class="remove" @click="$emit('clip-remove')">X</button>
     </span>
   </div>
 </template>
