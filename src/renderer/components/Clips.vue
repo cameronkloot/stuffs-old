@@ -105,9 +105,11 @@ const methods = {
       $event.preventDefault()
       $event.stopPropagation()
       // do a check for windows/control key rather than metakey
-      if (direction === DIRECTIONS.UP && $event.metaKey === true) {
+      if (direction === DIRECTIONS.UP &&
+        $event.metaKey === true && $event.shiftKey === true) {
         this.setSelected(-1)
-      } else if (direction === DIRECTIONS.DOWN && $event.metaKey === true) {
+      } else if (direction === DIRECTIONS.DOWN &&
+        $event.metaKey === true && $event.shiftKey === true) {
         this.setSelected(this.list.length - 1)
       } else if (direction === DIRECTIONS.UP && this.selected > -1) {
         this.setSelected(this.selected - 1)
@@ -126,7 +128,7 @@ const methods = {
     }
   },
   scrollListToSelected (direction) {
-    if (this.selected > -1 && this.list.length > 1) {
+    if (this.list.length > 1) {
       const index = this.selected > -1 ? this.selected : 0
       // Scroll to keep selected in view
       const command = this.$refs.command
