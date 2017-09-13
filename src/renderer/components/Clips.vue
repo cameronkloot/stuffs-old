@@ -71,8 +71,6 @@ const methods = {
   keydownSelectClips ($event) {
     let direction = null
     if ($event.key === 'Tab') {
-      $event.preventDefault()
-      $event.stopPropagation()
       direction = $event.shiftKey === true ? DIRECTIONS.UP : DIRECTIONS.DOWN
     } else if ($event.key === 'ArrowUp') {
       direction = DIRECTIONS.UP
@@ -81,8 +79,14 @@ const methods = {
     }
 
     if (direction === DIRECTIONS.UP || direction === DIRECTIONS.DOWN) {
-      // Increment/decrement selection
-      if (direction === DIRECTIONS.UP && this.selected > -1) {
+      $event.preventDefault()
+      $event.stopPropagation()
+      // do a check for windows/control key rather than metakey
+      if (direction === DIRECTIONS.UP && $event.metaKey === true) {
+        this.setSelected(-1)
+      } else if (direction === DIRECTIONS.DOWN && $event.metaKey === true) {
+        this.setSelected(this.list.length - 1)
+      } else if (direction === DIRECTIONS.UP && this.selected > -1) {
         this.setSelected(this.selected - 1)
       } else if (direction === DIRECTIONS.DOWN && this.selected < this.list.length - 1) {
         this.setSelected(this.selected + 1)
@@ -99,33 +103,32 @@ const methods = {
     }
   },
   scrollListToSelected (direction) {
-    if (this.selected > -1) {
-      // Scroll to keep selected in view
-      const command = this.$refs.command
-      const list = this.$refs.list
-      const clip = this.$refs.clips[this.selected].$el
+    const index = this.selected > -1 ? this.selected : 0
+    // Scroll to keep selected in view
+    const command = this.$refs.command
+    const list = this.$refs.list
+    const clip = this.$refs.clips[index].$el
 
-      let tempScrollType = this.scrollType
-      if (tempScrollType === SCROLL.DIRECTION) {
-        // Implement separately with normal scrolling in between top and bottom
-        tempScrollType = direction === DIRECTIONS.UP ? SCROLL.TOP : SCROLL.BOTTOM
-      }
-      switch (tempScrollType) {
-        case SCROLL.PROGRESS:
-          list.scrollTop = (clip.offsetHeight * this.selected) -
-            this.selected * (list.offsetHeight - clip.offsetHeight) / this.list.length
-          break
-        case SCROLL.DIRECTION && direction === DIRECTIONS.UP:
-        case SCROLL.TOP:
-          list.scrollTop = clip.offsetHeight * this.selected
-          break
-        case SCROLL.DIRECTION && direction === DIRECTIONS.DOWN:
-        case SCROLL.BOTTOM:
-        default:
-          list.scrollTop = clip.offsetTop + clip.offsetHeight -
-            list.offsetHeight - command.offsetHeight
-          break
-      }
+    let tempScrollType = this.scrollType
+    if (tempScrollType === SCROLL.DIRECTION) {
+      // Implement separately with normal scrolling in between top and bottom
+      tempScrollType = direction === DIRECTIONS.UP ? SCROLL.TOP : SCROLL.BOTTOM
+    }
+    switch (tempScrollType) {
+      case SCROLL.PROGRESS:
+        list.scrollTop = (clip.offsetHeight * index) -
+          index * (list.offsetHeight - clip.offsetHeight) / this.list.length
+        break
+      case SCROLL.DIRECTION && direction === DIRECTIONS.UP:
+      case SCROLL.TOP:
+        list.scrollTop = clip.offsetHeight * index
+        break
+      case SCROLL.DIRECTION && direction === DIRECTIONS.DOWN:
+      case SCROLL.BOTTOM:
+      default:
+        list.scrollTop = clip.offsetTop + clip.offsetHeight -
+          list.offsetHeight - command.offsetHeight
+        break
     }
   }
 }
