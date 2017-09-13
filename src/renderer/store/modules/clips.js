@@ -25,11 +25,15 @@ const mutations = {
 }
 
 const actions = {
-  add ({ commit }, clip) {
+  add ({ state, commit }, clip) {
+    if (state.list.length > 0 && clip.text === state.list[0].text) {
+      return
+    }
     commit(types.ADD, {
       id: uuidv4(),
       ...clip
     })
+    commit(types.SET_SELECTED_INDEX, 0)
   },
   remove ({ commit }, clip) {
     commit(types.REMOVE, clip)

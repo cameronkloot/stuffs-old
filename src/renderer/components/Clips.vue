@@ -51,6 +51,12 @@ const computed = {
   ...mapGetters('clips', ['list', 'selected'])
 }
 
+const watch = {
+  list () {
+    this.scrollListToSelected()
+  }
+}
+
 const methods = {
   ...mapActions('clips', [
     'add',
@@ -140,6 +146,7 @@ const components = {
 export default {
   name,
   computed,
+  watch,
   methods,
   components,
   data () {

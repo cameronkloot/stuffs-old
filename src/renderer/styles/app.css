@@ -52,6 +52,12 @@ button:hover {
   background-color: #4c4340;
 }
 
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 #app {
   display: flex;
   flex-direction: column;
@@ -108,6 +114,7 @@ button:hover {
 
 #clips .clip .text {
   align-self: flex-start;
+  padding-right: 10px;
 }
 
 #clips .clip .buttons {

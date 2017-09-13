@@ -1,6 +1,6 @@
 <template>
   <div class="clip" :data-selected="selected">
-    <span class="text">{{ clip.text }}</span>
+    <span class="text truncate">{{ clip.text }}</span>
     <span class="buttons">
       <button class="remove" @click="$emit('clip-remove', clip)">X</button>
     </span>
