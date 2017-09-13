@@ -16,7 +16,7 @@
         ADD
       </button>
     </div>
-    <div class="clips-container" ref="list">
+    <div class="clips-container" ref="list" :data-scroll-type="this.scrollType">
       <Clip
         v-for="(clip, index) in list"
         :key="clip.id"
@@ -36,6 +36,13 @@ import Clip from './Clips/Clip'
 const DIRECTIONS = {
   UP: 'UP',
   DOWN: 'DOWN'
+}
+
+const SCROLL = {
+  TOP: 'TOP',
+  BOTTOM: 'BOTTOM',
+  DIRECTION: 'DIRECTION',
+  PROGRESS: 'PROGRESS' // could disable scrollbar with this option
 }
 
 const name = 'clips'
@@ -88,16 +95,37 @@ const methods = {
         this.$refs.command.blur()
       }
 
-      this.scrollListToSelected()
+      this.scrollListToSelected(direction)
     }
   },
-  scrollListToSelected () {
+  scrollListToSelected (direction) {
     if (this.selected > -1) {
       // Scroll to keep selected in view
       const command = this.$refs.command
       const list = this.$refs.list
       const clip = this.$refs.clips[this.selected].$el
-      list.scrollTop = clip.offsetTop - command.offsetHeight
+
+      let tempScrollType = this.scrollType
+      if (tempScrollType === SCROLL.DIRECTION) {
+        // Implement separately with normal scrolling in between top and bottom
+        tempScrollType = direction === DIRECTIONS.UP ? SCROLL.TOP : SCROLL.BOTTOM
+      }
+      switch (tempScrollType) {
+        case SCROLL.PROGRESS:
+          list.scrollTop = (clip.offsetHeight * this.selected) -
+            this.selected * (list.offsetHeight - clip.offsetHeight) / this.list.length
+          break
+        case SCROLL.DIRECTION && direction === DIRECTIONS.UP:
+        case SCROLL.TOP:
+          list.scrollTop = clip.offsetHeight * this.selected
+          break
+        case SCROLL.DIRECTION && direction === DIRECTIONS.DOWN:
+        case SCROLL.BOTTOM:
+        default:
+          list.scrollTop = clip.offsetTop + clip.offsetHeight -
+            list.offsetHeight - command.offsetHeight
+          break
+      }
     }
   }
 }
@@ -113,7 +141,8 @@ export default {
   components,
   data () {
     return {
-      command: ''
+      command: '',
+      scrollType: SCROLL.PROGRESS // change to option
     }
   },
   mounted () {

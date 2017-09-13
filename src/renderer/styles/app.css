@@ -87,8 +87,12 @@ button:hover {
 }
 
 #clips .clips-container {
-  overflow: scroll;
+  overflow: auto;
   flex: 1;
+}
+
+#clips .clips-container[data-scroll-type="PROGRESS"]::-webkit-scrollbar {
+  width: 0;
 }
 
 #clips .clip {
