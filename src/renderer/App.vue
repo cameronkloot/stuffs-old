@@ -23,7 +23,7 @@ export default {
     const thisContext = this
     setInterval(() => {
       const text = clipboard.readText()
-      thisContext.add({ text })
+      thisContext.add({ text, source: 'clipboard' })
     }, 100)
   }
 }

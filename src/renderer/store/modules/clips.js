@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
+import { clipboard } from 'electron'
 
 import * as types from '../mutation-types'
 
@@ -28,6 +29,9 @@ const actions = {
   add ({ state, commit }, clip) {
     if (state.list.length > 0 && clip.text === state.list[0].text) {
       return
+    }
+    if (clip.source !== 'clipboard') {
+      clipboard.writeText(clip.text)
     }
     commit(types.ADD, {
       id: uuidv4(),

@@ -66,7 +66,8 @@ const methods = {
   clickAddClip () {
     if (this.command.trim().length > 0) {
       this.add({
-        text: this.command
+        text: this.command,
+        source: 'command'
       })
       this.command = ''
     }
