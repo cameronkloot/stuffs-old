@@ -17,6 +17,10 @@ module.exports = {
     'html'
   ],
   rules: {
+    'space-in-parens': 1,
+    'no-mixed-operators': 1,
+    'padded-blocks': 1,
+    'space-infix-ops': 1,
     'no-unused-vars': 1,
     'indent': 1,
     'space-before-function-paren': ['error', 'always'],
