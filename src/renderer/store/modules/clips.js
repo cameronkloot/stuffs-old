@@ -27,7 +27,8 @@ const mutations = {
 
 const actions = {
   add ({ state, commit }, clip) {
-    if (state.list.length > 0 && clip.text === state.list[0].text) {
+    if (clip.text.trim().length === 0 ||
+        (state.list.length > 0 && clip.text === state.list[0].text)) {
       return
     }
     if (clip.source !== 'clipboard') {
@@ -39,8 +40,13 @@ const actions = {
     })
     commit(types.SET_SELECTED_INDEX, 0)
   },
-  remove ({ commit }, clip) {
+  remove ({ state, commit }, clip) {
     commit(types.REMOVE, clip)
+    if (state.list.length > 0) {
+      clipboard.writeText(state.list[0].text)
+    } else {
+      clipboard.clear()
+    }
   },
   setSelected ({ commit }, index) {
     commit(types.SET_SELECTED_INDEX, index)

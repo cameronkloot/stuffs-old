@@ -76,6 +76,12 @@ const methods = {
     this.remove(clip)
   },
   keydownSelectClips ($event) {
+    // Move to mixin
+    if ($event.key === 'Backspace' && this.selected > -1) {
+      this.clipRemove(this.list[this.selected])
+      return
+    }
+
     let direction = null
     if ($event.key === 'Tab') {
       direction = $event.shiftKey === true ? DIRECTIONS.UP : DIRECTIONS.DOWN
@@ -110,32 +116,34 @@ const methods = {
     }
   },
   scrollListToSelected (direction) {
-    const index = this.selected > -1 ? this.selected : 0
-    // Scroll to keep selected in view
-    const command = this.$refs.command
-    const list = this.$refs.list
-    const clip = this.$refs.clips[index].$el
+    if (this.selected > -1 && this.list.length > 1) {
+      const index = this.selected > -1 ? this.selected : 0
+      // Scroll to keep selected in view
+      const command = this.$refs.command
+      const list = this.$refs.list
+      const clip = this.$refs.clips[index].$el
 
-    let tempScrollType = this.scrollType
-    if (tempScrollType === SCROLL.DIRECTION) {
-      // Implement separately with normal scrolling in between top and bottom
-      tempScrollType = direction === DIRECTIONS.UP ? SCROLL.TOP : SCROLL.BOTTOM
-    }
-    switch (tempScrollType) {
-      case SCROLL.PROGRESS:
-        list.scrollTop = (clip.offsetHeight * index) -
-          index * (list.offsetHeight - clip.offsetHeight) / this.list.length
-        break
-      case SCROLL.DIRECTION && direction === DIRECTIONS.UP:
-      case SCROLL.TOP:
-        list.scrollTop = clip.offsetHeight * index
-        break
-      case SCROLL.DIRECTION && direction === DIRECTIONS.DOWN:
-      case SCROLL.BOTTOM:
-      default:
-        list.scrollTop = clip.offsetTop + clip.offsetHeight -
-          list.offsetHeight - command.offsetHeight
-        break
+      let tempScrollType = this.scrollType
+      if (tempScrollType === SCROLL.DIRECTION) {
+        // Implement separately with normal scrolling in between top and bottom
+        tempScrollType = direction === DIRECTIONS.UP ? SCROLL.TOP : SCROLL.BOTTOM
+      }
+      switch (tempScrollType) {
+        case SCROLL.PROGRESS:
+          list.scrollTop = (clip.offsetHeight * index) -
+            index * (list.offsetHeight - clip.offsetHeight) / this.list.length
+          break
+        case SCROLL.DIRECTION && direction === DIRECTIONS.UP:
+        case SCROLL.TOP:
+          list.scrollTop = clip.offsetHeight * index
+          break
+        case SCROLL.DIRECTION && direction === DIRECTIONS.DOWN:
+        case SCROLL.BOTTOM:
+        default:
+          list.scrollTop = clip.offsetTop + clip.offsetHeight -
+            list.offsetHeight - command.offsetHeight
+          break
+      }
     }
   }
 }
