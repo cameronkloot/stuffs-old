@@ -20,6 +20,15 @@ const mutations = {
     const list = _.reject(currentState.list, clip)
     currentState.list = list
   },
+  [types.PROMOTE] (currentState, { from, count, to }) {
+    const list = currentState.list
+    const move = list.splice(from, count)
+
+    list.splice(to, 0, ...move)
+    // console.log(list)
+    // console.log(list.length)
+    currentState.list = list
+  },
   [types.SET_SELECTED_INDEX] (currentState, index) {
     currentState.selected = index
   }
@@ -38,15 +47,24 @@ const actions = {
       id: uuidv4(),
       ...clip
     })
-    commit(types.SET_SELECTED_INDEX, 0)
   },
-  remove ({ state, commit }, clip) {
+  remove ({ state, dispatch, commit }, clip) {
     commit(types.REMOVE, clip)
     if (state.list.length > 0) {
       clipboard.writeText(state.list[0].text)
     } else {
       clipboard.clear()
     }
+  },
+  promote ({ state, dispatch, commit }, { from, count, to }) {
+    if (to === 0) {
+      clipboard.writeText(state.list[from].text)
+    }
+    commit(types.PROMOTE, { from, count, to })
+    dispatch('setSelected', to)
+  },
+  exalt ({ dispatch }, { from, count }) {
+    dispatch('promote', { from, count, to: 0 })
   },
   setSelected ({ commit }, index) {
     commit(types.SET_SELECTED_INDEX, index)

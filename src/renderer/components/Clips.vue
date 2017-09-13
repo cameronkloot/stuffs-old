@@ -61,6 +61,7 @@ const methods = {
   ...mapActions('clips', [
     'add',
     'remove',
+    'exalt',
     'setSelected'
   ]),
   clickAddClip () {
@@ -79,6 +80,11 @@ const methods = {
     // Move to mixin
     if ($event.key === 'Backspace' && this.selected > -1) {
       this.clipRemove(this.list[this.selected])
+      return
+    }
+
+    if ($event.key === 'Enter' && this.selected > -1) {
+      this.exalt({ from: this.selected, count: 1 })
       return
     }
 
@@ -165,6 +171,10 @@ export default {
     }
   },
   mounted () {
+    if (this.selected >= this.list.length) {
+      // for DEBUG only
+      this.setSelected(0)
+    }
     this.$nextTick(() => {
       this.scrollListToSelected()
       window.addEventListener('keydown', this.keydownSelectClips)
