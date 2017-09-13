@@ -23,10 +23,7 @@ const mutations = {
   [types.PROMOTE] (currentState, { from, count, to }) {
     const list = currentState.list
     const move = list.splice(from, count)
-
     list.splice(to, 0, ...move)
-    // console.log(list)
-    // console.log(list.length)
     currentState.list = list
   },
   [types.SET_SELECTED_INDEX] (currentState, index) {
