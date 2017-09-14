@@ -66,9 +66,7 @@ const actions = {
       selected: false,
       ...clip
     })
-    if (state.cursor > -1) {
-      dispatch('setCursor', { cursor: state.cursor + 1, key: false })
-    }
+    dispatch('setCursor', { index: 0, key: false })
   },
   remove ({ state, commit }, index = false) {
     // move cursor?

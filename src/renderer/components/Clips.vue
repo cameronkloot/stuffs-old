@@ -7,7 +7,8 @@
         type="text"
         placeholder="Type here..."
         v-model="command"
-        @keydown.enter="clickAddClip">
+        @keydown.enter="clickAddClip"
+        @focus="setCursor({ index: -1, key: false })">
       </input>
       <button class="add"
         v-show="command.length > 0"
