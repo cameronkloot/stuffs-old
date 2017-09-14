@@ -7,6 +7,7 @@ const namespaced = true
 
 const state = {
   list: [],
+  watching: true,
   cursor: -1
 }
 
@@ -25,11 +26,16 @@ const mutations = {
       clip => clip.selected !== true
     )
   },
-  [types.PROMOTE] (currentState, { from, count, to }) {
-    const list = currentState.list
-    const move = list.splice(from, count)
-    list.splice(to, 0, ...move)
-    currentState.list = list
+  [types.PROMOTE] (currentState, index) {
+    const selected = []
+    const list = currentState.list.filter((clip) => {
+      if (clip.selected === true) {
+        selected.push(clip)
+        return false
+      }
+      return true
+    })
+    currentState.list = [...selected, ...list]
   },
   [types.SET_CURSOR] (currentState, cursor) {
     currentState.cursor = cursor
@@ -80,15 +86,16 @@ const actions = {
       clipboard.writeText(text)
     }
   },
-  promote ({ state, dispatch, commit }, { from, count, to }) {
-    if (to === 0) {
-      clipboard.writeText(state.list[from].text)
+  promote ({ state, dispatch, commit }, index) {
+    if (index === 0) {
+      const clip = state.list.find(c => c.selected === true)
+      clipboard.writeText(clip.text)
     }
-    commit(types.PROMOTE, { from, count, to })
-    dispatch('setSelected', to)
+    commit(types.PROMOTE, index)
+    dispatch('setCursor', { index, key: false })
   },
-  exalt ({ dispatch }, { from, count }) {
-    dispatch('promote', { from, count, to: 0 })
+  exalt ({ dispatch }) {
+    dispatch('promote', 0)
   },
   setCursor ({ state, commit }, { index, key }) {
     const lastCursor = state.cursor

@@ -54,6 +54,12 @@ const computed = {
   ])
 }
 
+const watch = {
+  cursor () {
+    this.scrollToCursor()
+  }
+}
+
 const methods = {
   ...mapActions('clips', [
     'add',
@@ -87,7 +93,7 @@ const methods = {
     }
 
     if ($event.key === 'Enter' && this.cursor > -1) {
-      // this.exalt({ from: this.selected, count: 1 })
+      this.exalt()
       return
     }
 
@@ -115,7 +121,7 @@ const methods = {
         this.$refs.command.blur()
       }
 
-      this.scrollToCursor(direction)
+      // this.scrollToCursor(direction)
     }
   },
   scrollToCursor (direction = 'NONE') {
@@ -157,6 +163,7 @@ const components = {
 export default {
   name,
   computed,
+  watch,
   methods,
   components,
   data () {
