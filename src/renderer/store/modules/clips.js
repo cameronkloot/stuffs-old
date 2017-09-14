@@ -61,7 +61,7 @@ const actions = {
       ...clip
     })
     if (state.cursor > -1) {
-      dispatch('setCursor', state.cursor + 1)
+      dispatch('setCursor', { cursor: state.cursor + 1, key: false })
     }
   },
   remove ({ state, commit }, index = false) {
@@ -71,7 +71,10 @@ const actions = {
     } else if (index > -1 && index < state.list.length) {
       commit(types.REMOVE_AT, index)
     }
-    if (index === 0 || index === false) {
+    if (state.cursor >= state.list.length) {
+      commit(types.SET_CURSOR, { cursor: state.list.length - 1, key: false })
+    }
+    if (index === 0 || index === false || state.list.length === 0) {
       // Temporary: always write first list item if removing selected items
       const text = state.list.length > 0 ? state.list[0].text : ''
       clipboard.writeText(text)
