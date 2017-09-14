@@ -112,6 +112,12 @@ button:hover {
 
 #clips .clip[data-selected="true"] {
   background-color: #4c4340;
+  opacity: 0.75;
+}
+
+#clips .clip[data-cursor="true"] {
+  background-color: #4c4340;
+  opacity: 1;
 }
 
 #clips .clip .text {

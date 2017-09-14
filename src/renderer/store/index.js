@@ -6,7 +6,11 @@ import modules from './modules'
 
 Vue.use(Vuex)
 
-const plugins = [createPersistedState()]
+const plugins = [
+  createPersistedState({
+    paths: ['clips.list']
+  })
+]
 
 const strict = process.env.NODE_ENV !== 'production'
 

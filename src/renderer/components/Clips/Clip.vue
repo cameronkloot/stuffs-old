@@ -1,5 +1,8 @@
 <template>
-  <div class="clip" :data-selected="selected" @click="$emit('clip-click')">
+  <div class="clip"
+    :data-selected="clip.selected"
+    :data-cursor="cursor"
+    @click="$emit('clip-click', $event)">
     <span class="text truncate">{{ clip.text }}</span>
     <span class="buttons">
       <button class="remove" @click="$emit('clip-remove')">X</button>
@@ -15,7 +18,7 @@ const props = {
     type: Object,
     required: true
   },
-  selected: {
+  cursor: {
     type: Boolean,
     default: false
   }

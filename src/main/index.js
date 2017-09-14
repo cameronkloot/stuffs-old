@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron' // eslint-disable-line
+import { app, BrowserWindow, globalShortcut } from 'electron' // eslint-disable-line
 
 /**
  * Set `__static` path to static files in production
@@ -30,7 +30,38 @@ function createWindow () {
   })
 }
 
-app.on('ready', createWindow)
+function registerShortcuts () {
+
+}
+
+app.on('ready', () => {
+  createWindow()
+
+  // Register a 'CommandOrControl+X' shortcut listener.
+  const ret = globalShortcut.register('CommandOrControl+]', () => {
+    console.log('CommandOrControl+X is pressed')
+    if (mainWindow.isFocused()) {
+      mainWindow.hide()
+    } else {
+      mainWindow.show()
+    }
+  })
+
+  if (!ret) {
+    console.log('registration failed')
+  }
+
+  // Check whether a shortcut is registered.
+  console.log(globalShortcut.isRegistered('CommandOrControl+]'))
+})
+
+app.on('will-quit', () => {
+  // Unregister a shortcut.
+  globalShortcut.unregister('CommandOrControl+]')
+
+  // Unregister all shortcuts.
+  globalShortcut.unregisterAll()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

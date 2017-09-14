@@ -17,6 +17,7 @@ module.exports = {
     'html'
   ],
   rules: {
+    'max-len': 1,
     'space-in-parens': 1,
     'no-mixed-operators': 1,
     'padded-blocks': 1,

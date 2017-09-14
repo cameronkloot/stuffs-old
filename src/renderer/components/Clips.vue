@@ -7,8 +7,7 @@
         type="text"
         placeholder="Type here..."
         v-model="command"
-        @keydown.enter="clickAddClip"
-        @focus="setSelected(-1)">
+        @keydown.enter="clickAddClip">
       </input>
       <button class="add"
         v-show="command.length > 0"
@@ -21,10 +20,10 @@
         v-for="(clip, index) in list"
         :key="clip.id"
         ref="clips"
-        :selected="selected === index"
+        :cursor="cursor === index"
         :clip="clip"
         @clip-remove="clipRemove(index)"
-        @clip-click="clipClick(index)">
+        @clip-click="clipClick($event, index)">
       </Clip>
     </div>
   </div>
@@ -35,8 +34,8 @@ import { mapActions, mapGetters } from 'vuex'
 import Clip from './Clips/Clip'
 
 const DIRECTIONS = {
-  UP: 'UP',
-  DOWN: 'DOWN'
+  UP: -1,
+  DOWN: 1
 }
 
 const SCROLL = {
@@ -49,13 +48,10 @@ const SCROLL = {
 const name = 'clips'
 
 const computed = {
-  ...mapGetters('clips', ['list', 'selected'])
-}
-
-const watch = {
-  list () {
-    this.scrollListToSelected()
-  }
+  ...mapGetters('clips', [
+    'list',
+    'cursor'
+  ])
 }
 
 const methods = {
@@ -63,7 +59,7 @@ const methods = {
     'add',
     'remove',
     'exalt',
-    'setSelected'
+    'setCursor'
   ]),
   clickAddClip () {
     if (this.command.trim().length > 0) {
@@ -75,20 +71,23 @@ const methods = {
     }
   },
   clipRemove (index) {
-    this.remove({ from: index, count: 1 })
+    this.remove(index)
   },
-  clipClick (index) {
-    this.setSelected(index)
+  clipClick ($event, index) {
+    this.setCursor({ index, key: false })
   },
-  keydownSelectClips ($event) {
+  keyDown ($event) {
+    if (this.list.length === 0) {
+      return
+    }
     // Move to mixin
-    if ($event.key === 'Backspace' && this.selected > -1) {
-      this.remove({ from: this.selected, count: 1 })
+    if ($event.key === 'Backspace' && this.cursor > -1) {
+      this.remove()
       return
     }
 
-    if ($event.key === 'Enter' && this.selected > -1) {
-      this.exalt({ from: this.selected, count: 1 })
+    if ($event.key === 'Enter' && this.cursor > -1) {
+      // this.exalt({ from: this.selected, count: 1 })
       return
     }
 
@@ -104,36 +103,27 @@ const methods = {
     if (direction === DIRECTIONS.UP || direction === DIRECTIONS.DOWN) {
       $event.preventDefault()
       $event.stopPropagation()
-      // do a check for windows/control key rather than metakey
-      if (direction === DIRECTIONS.UP &&
-        $event.metaKey === true && $event.shiftKey === true) {
-        this.setSelected(-1)
-      } else if (direction === DIRECTIONS.DOWN &&
-        $event.metaKey === true && $event.shiftKey === true) {
-        this.setSelected(this.list.length - 1)
-      } else if (direction === DIRECTIONS.UP && this.selected > -1) {
-        this.setSelected(this.selected - 1)
-      } else if (direction === DIRECTIONS.DOWN && this.selected < this.list.length - 1) {
-        this.setSelected(this.selected + 1)
-      }
+
+      const index = this.cursor + direction // +/- 1
+      const key = $event.shiftKey ? 'shift' : false
+      this.setCursor({ index, key })
 
       // Focus in/out on command input
-      if (this.selected === -1) {
+      if (this.cursor === -1) {
         this.$refs.command.focus()
       } else {
         this.$refs.command.blur()
       }
 
-      this.scrollListToSelected(direction)
+      this.scrollToCursor(direction)
     }
   },
-  scrollListToSelected (direction) {
-    if (this.list.length > 1) {
-      const index = this.selected > -1 ? this.selected : 0
-      // Scroll to keep selected in view
+  scrollToCursor (direction = 'NONE') {
+    if (this.list.length > 1 && this.cursor > -1) {
+      // Scroll to keep cursor in view
       const command = this.$refs.command
       const list = this.$refs.list
-      const clip = this.$refs.clips[index].$el
+      const clip = this.$refs.clips[this.cursor].$el
 
       let tempScrollType = this.scrollType
       if (tempScrollType === SCROLL.DIRECTION) {
@@ -142,12 +132,12 @@ const methods = {
       }
       switch (tempScrollType) {
         case SCROLL.PROGRESS:
-          list.scrollTop = (clip.offsetHeight * index) -
-            index * (list.offsetHeight - clip.offsetHeight) / this.list.length
+          list.scrollTop = (clip.offsetHeight * this.cursor) -
+            (this.cursor / this.list.length) * (list.offsetHeight - clip.offsetHeight)
           break
         case SCROLL.DIRECTION && direction === DIRECTIONS.UP:
         case SCROLL.TOP:
-          list.scrollTop = clip.offsetHeight * index
+          list.scrollTop = clip.offsetHeight * this.cursor
           break
         case SCROLL.DIRECTION && direction === DIRECTIONS.DOWN:
         case SCROLL.BOTTOM:
@@ -167,7 +157,6 @@ const components = {
 export default {
   name,
   computed,
-  watch,
   methods,
   components,
   data () {
@@ -177,18 +166,13 @@ export default {
     }
   },
   mounted () {
-    if (this.selected >= this.list.length) {
-      // for DEBUG only
-      this.setSelected(0)
-    }
     this.$nextTick(() => {
-      this.scrollListToSelected()
-      window.addEventListener('keydown', this.keydownSelectClips)
+      window.addEventListener('keydown', this.keyDown)
     })
   },
   destroyed () {
     this.$nextTick(() => {
-      window.removeEventListener('keydown', this.keydownSelectClips)
+      window.removeEventListener('keydown', this.keyDown)
     })
   }
 }
