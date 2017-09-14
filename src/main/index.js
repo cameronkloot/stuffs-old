@@ -18,9 +18,12 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 563,
-    useContentSize: true,
-    width: 1000
+    height: 555,
+    width: 750,
+    frame: false,
+    skipTaskbar: true,
+    backgroundColor: '#2F3133'
+    // focusable: false
   })
 
   mainWindow.loadURL(winURL)
@@ -30,17 +33,14 @@ function createWindow () {
   })
 }
 
-function registerShortcuts () {
-
-}
-
 app.on('ready', () => {
   createWindow()
+  // app.dock.hide()
 
   // Register a 'CommandOrControl+X' shortcut listener.
   const ret = globalShortcut.register('CommandOrControl+]', () => {
     console.log('CommandOrControl+X is pressed')
-    if (mainWindow.isFocused()) {
+    if (mainWindow.isVisible()) {
       mainWindow.hide()
     } else {
       mainWindow.show()
