@@ -34,9 +34,9 @@ const mutations = {
   [types.SET_CURSOR] (currentState, cursor) {
     currentState.cursor = cursor
   },
-  [types.SET_SELECTED] (currentState, index) {
+  [types.SET_SELECTED] (currentState, { index, selected }) {
     // Add caching of selected id/position. have to update positions
-    currentState.list[index].selected = true
+    currentState.list[index].selected = selected
   },
   [types.RESET_SELECTED] (currentState) {
     currentState.list = currentState.list.map((clip) => {
@@ -94,15 +94,18 @@ const actions = {
       commit(types.RESET_SELECTED)
     } else if (key === 'shift') {
       // Select previous cursor
-      if (lastCursor > -1) {
-        commit(types.SET_SELECTED, lastCursor)
+      if (lastCursor > -1 && (index > 0 && index < state.list.length)) {
+        const nextSelected = state.list[index].selected
+        if (nextSelected === true) {
+          commit(types.SET_SELECTED, { index: lastCursor, selected: false })
+        }
       }
     }
 
     if (index >= -1 && index < state.list.length) {
       commit(types.SET_CURSOR, index)
       if (index > -1) {
-        commit(types.SET_SELECTED, index)
+        commit(types.SET_SELECTED, { index, selected: true })
       }
     }
   }
