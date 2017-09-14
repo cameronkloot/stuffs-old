@@ -90,13 +90,14 @@ const methods = {
     if (this.list.length === 0) {
       return
     }
+    const modified = $event.shiftKey || $event.metaKey || $event.ctrlKey
     // Move to mixin
-    if ($event.key === 'Backspace' && this.cursor > -1) {
+    if ($event.key === 'Backspace' && modified === false && this.cursor > -1) {
       this.remove()
       return
     }
 
-    if ($event.key === 'Enter' && this.cursor > -1) {
+    if ($event.key === 'Enter' && modified === false && this.cursor > -1) {
       this.exalt()
       return
     }
