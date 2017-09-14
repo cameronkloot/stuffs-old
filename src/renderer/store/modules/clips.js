@@ -66,17 +66,18 @@ const actions = {
       selected: false,
       ...clip
     })
-    dispatch('setCursor', { index: 0, key: false })
   },
   remove ({ state, commit }, index = false) {
-    // move cursor?
     if (index === false) {
       commit(types.REMOVE_SELECTED)
     } else if (index > -1 && index < state.list.length) {
       commit(types.REMOVE_AT, index)
     }
     if (state.cursor >= state.list.length) {
-      commit(types.SET_CURSOR, { cursor: state.list.length - 1, key: false })
+      commit(types.SET_CURSOR, state.list.length - 1)
+    }
+    if (state.list.length > 0) {
+      commit(types.SET_SELECTED, { index: state.cursor, selected: true })
     }
     if (index === 0 || index === false || state.list.length === 0) {
       // Temporary: always write first list item if removing selected items

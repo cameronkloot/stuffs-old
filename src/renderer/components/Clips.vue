@@ -58,6 +58,9 @@ const computed = {
 const watch = {
   cursor () {
     this.scrollToCursor()
+    if (this.cursor === -1 && this.list.length === 0) {
+      this.$refs.command.focus()
+    }
   }
 }
 
