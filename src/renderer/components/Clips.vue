@@ -144,7 +144,7 @@ const methods = {
       switch (tempScrollType) {
         case SCROLL.PROGRESS:
           list.scrollTop = (clip.offsetHeight * this.cursor) -
-            (this.cursor / this.list.length) * (list.offsetHeight - clip.offsetHeight)
+            ((this.cursor / this.list.length) * (list.offsetHeight - clip.offsetHeight))
           break
         case SCROLL.DIRECTION && direction === DIRECTIONS.UP:
         case SCROLL.TOP:
@@ -153,8 +153,8 @@ const methods = {
         case SCROLL.DIRECTION && direction === DIRECTIONS.DOWN:
         case SCROLL.BOTTOM:
         default:
-          list.scrollTop = clip.offsetTop + clip.offsetHeight -
-            list.offsetHeight - command.offsetHeight
+          list.scrollTop = (clip.offsetTop + clip.offsetHeight) -
+            (list.offsetHeight - command.offsetHeight)
           break
       }
     }
