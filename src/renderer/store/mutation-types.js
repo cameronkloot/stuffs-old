@@ -1,4 +1,5 @@
 export const ADD = 'ADD'
+export const REMOVE = 'REMOVE'
 export const REMOVE_AT = 'REMOVE_AT'
 export const REMOVE_SELECTED = 'REMOVE_SELECTED'
 export const PROMOTE = 'PROMOTE'

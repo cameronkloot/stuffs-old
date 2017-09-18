@@ -1,14 +1,11 @@
 <template>
   <div id="clips">
     <div class="header">
-      <input
-        class="command"
-        ref="command"
-        type="text"
+      <input ref="command" class="command" type="text"
         placeholder="Type here..."
         v-model="command"
         @keydown.enter="clickAddClip"
-        @focus="setCursor({ index: -1, key: false })">
+        @keydown="keyDownCommand">
       </input>
       <button class="add"
         v-show="command.length > 0"
@@ -17,12 +14,10 @@
       </button>
     </div>
     <div class="clips-container" ref="list" :data-scroll-type="this.scrollType">
-      <Clip
-        v-for="(clip, index) in list"
-        :key="clip.id"
-        ref="clips"
-        :cursor="cursor === index"
+      <Clip ref="clips"
+        v-for="(clip, index) in filteredList" :key="index"
         :clip="clip"
+        @clip-keydown="keyDownClip($event, index)"
         @clip-remove="clipRemove(index)"
         @clip-click="clipClick($event, index)">
       </Clip>
@@ -31,6 +26,7 @@
 </template>
 
 <script>
+import { ipcRenderer } from 'electron'
 import { mapActions, mapGetters } from 'vuex'
 import Clip from './Clips/Clip'
 
@@ -52,15 +48,11 @@ const computed = {
   ...mapGetters('clips', [
     'list',
     'cursor'
-  ])
-}
-
-const watch = {
-  cursor () {
-    this.scrollToCursor()
-    if (this.cursor === -1 && this.list.length === 0) {
-      this.$refs.command.focus()
-    }
+  ]),
+  filteredList () {
+    return this.list.filter(clip =>
+      clip.text.toLowerCase().includes(this.command.toLowerCase())
+    )
   }
 }
 
@@ -71,6 +63,17 @@ const methods = {
     'exalt',
     'setCursor'
   ]),
+  focusCommand () {
+    this.$refs.command.focus()
+  },
+  keyDownCommand ($event) {
+    $event.stopPropagation()
+    if ($event.key === 'ArrowDown' && this.filteredList.length > 0) {
+      console.log(this.$refs.clips[0])
+      this.$refs.command.blur()
+      this.$refs.clips[0].$el.focus()
+    }
+  },
   clickAddClip () {
     if (this.command.trim().length > 0) {
       this.add({
@@ -81,83 +84,45 @@ const methods = {
     }
   },
   clipRemove (index) {
-    this.remove(index)
+    this.remove(this.filteredList[index].id)
   },
   clipClick ($event, index) {
-    this.setCursor({ index, key: false })
+    $event.stopPropagation()
+    $event.preventDefault()
+    this.$refs.clips[index].$el.focus()
   },
-  keyDown ($event) {
-    if (this.list.length === 0) {
-      return
-    }
-    const modified = $event.shiftKey || $event.metaKey || $event.ctrlKey
-    // Move to mixin
-    if ($event.key === 'Backspace' && modified === false && this.cursor > -1) {
-      this.remove()
-      return
-    }
-
-    if ($event.key === 'Enter' && modified === false && this.cursor > -1) {
-      this.exalt()
-      return
-    }
-
-    let direction = null
-    if ($event.key === 'Tab') {
-      direction = $event.shiftKey === true ? DIRECTIONS.UP : DIRECTIONS.DOWN
+  keyDownClip ($event, index) {
+    $event.stopPropagation()
+    $event.preventDefault()
+    if ($event.key === 'ArrowDown') {
+      if (index + 1 < this.filteredList.length) {
+        this.$refs.clips[index].$el.blur()
+        this.$refs.clips[index + 1].$el.focus()
+        this.$refs.clips[index + 1].$el.scrollIntoView(false)
+      }
     } else if ($event.key === 'ArrowUp') {
-      direction = DIRECTIONS.UP
-    } else if ($event.key === 'ArrowDown') {
-      direction = DIRECTIONS.DOWN
-    }
-
-    if (direction === DIRECTIONS.UP || direction === DIRECTIONS.DOWN) {
-      $event.preventDefault()
-      $event.stopPropagation()
-
-      const index = this.cursor + direction // +/- 1
-      const key = $event.shiftKey ? 'shift' : false
-      this.setCursor({ index, key })
-
-      // Focus in/out on command input
-      if (this.cursor === -1) {
+      this.$refs.clips[index].$el.blur()
+      if (index > 0) {
+        this.$refs.clips[index - 1].$el.focus()
+        this.$refs.clips[index - 1].$el.scrollIntoView(false)
+      } else {
+        this.$refs.command.focus()
+      }
+    } else if ($event.key === 'Backspace') { // check for modifiers
+      this.$refs.clips[index].$el.blur()
+      this.remove(this.filteredList[index].id)
+      const next = index + 1
+      if (this.filteredList.length === 0) {
         this.$refs.command.focus()
       } else {
-        this.$refs.command.blur()
+        const nextIndex = index < this.filteredList.length ? index : this.filteredList.length - 1
+        this.$refs.clips[nextIndex].$el.focus()
+        this.$refs.clips[nextIndex].$el.scrollIntoView(false)
       }
-
-      // this.scrollToCursor(direction)
     }
   },
-  scrollToCursor (direction = 'NONE') {
-    if (this.list.length > 1 && this.cursor > -1) {
-      // Scroll to keep cursor in view
-      const command = this.$refs.command
-      const list = this.$refs.list
-      const clip = this.$refs.clips[this.cursor].$el
+  keyDown ($event) {
 
-      let tempScrollType = this.scrollType
-      if (tempScrollType === SCROLL.DIRECTION) {
-        // Implement separately with normal scrolling in between top and bottom
-        tempScrollType = direction === DIRECTIONS.UP ? SCROLL.TOP : SCROLL.BOTTOM
-      }
-      switch (tempScrollType) {
-        case SCROLL.PROGRESS:
-          list.scrollTop = (clip.offsetHeight * this.cursor) -
-            ((this.cursor / this.list.length) * (list.offsetHeight - clip.offsetHeight))
-          break
-        case SCROLL.DIRECTION && direction === DIRECTIONS.UP:
-        case SCROLL.TOP:
-          list.scrollTop = clip.offsetHeight * this.cursor
-          break
-        case SCROLL.DIRECTION && direction === DIRECTIONS.DOWN:
-        case SCROLL.BOTTOM:
-        default:
-          list.scrollTop = (clip.offsetTop + clip.offsetHeight) -
-            (list.offsetHeight - command.offsetHeight)
-          break
-      }
-    }
   }
 }
 
@@ -168,7 +133,6 @@ const components = {
 export default {
   name,
   computed,
-  watch,
   methods,
   components,
   data () {
@@ -178,6 +142,12 @@ export default {
     }
   },
   mounted () {
+    this.$refs.command.focus()
+
+    ipcRenderer.on('show', (event, message) => {
+      this.$refs.command.focus()
+    })
+
     this.$nextTick(() => {
       window.addEventListener('keydown', this.keyDown)
     })

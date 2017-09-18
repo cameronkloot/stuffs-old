@@ -109,9 +109,14 @@ button:hover {
   display: flex;
   justify-content: space-between;
   cursor: pointer;
+  outline: none;
 }
 
-#clips .clip[data-selected="true"] {
+#clips .clip:focus {
+  background-color: #4c4340;
+}
+
+/* #clips .clip[data-selected="true"] {
   background-color: #4c4340;
   opacity: 0.75;
 }
@@ -119,7 +124,7 @@ button:hover {
 #clips .clip[data-cursor="true"] {
   background-color: #4c4340;
   opacity: 1;
-}
+} */
 
 #clips .clip .text {
   align-self: flex-start;

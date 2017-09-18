@@ -31,6 +31,11 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+
+  mainWindow.on('show', () => {
+    console.log('show')
+    mainWindow.webContents.send('show', 'window show')
+  })
 }
 
 app.on('ready', () => {

@@ -1,7 +1,7 @@
 <template>
-  <div class="clip"
+  <div ref="clip" class="clip" tabindex="-1"
     :data-selected="clip.selected"
-    :data-cursor="cursor"
+    @keydown="$emit('clip-keydown', $event)"
     @click="$emit('clip-click', $event)">
     <span class="text truncate">{{ clip.text }}</span>
     <span class="buttons">
@@ -17,10 +17,6 @@ const props = {
   clip: {
     type: Object,
     required: true
-  },
-  cursor: {
-    type: Boolean,
-    default: false
   }
 }
 

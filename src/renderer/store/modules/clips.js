@@ -7,7 +7,6 @@ const namespaced = true
 
 const state = {
   list: [],
-  watching: true,
   cursor: -1
 }
 
@@ -15,6 +14,9 @@ const mutations = {
   [types.ADD] (currentState, clip) {
     const list = [clip, ...currentState.list]
     currentState.list = list
+  },
+  [types.REMOVE] (currentState, index) {
+    currentState.list.splice(index, 1)
   },
   [types.REMOVE_AT] (currentState, from) {
     const list = currentState.list
@@ -67,23 +69,42 @@ const actions = {
       ...clip
     })
   },
-  remove ({ state, commit }, index = false) {
-    if (index === false) {
-      commit(types.REMOVE_SELECTED)
-    } else if (index > -1 && index < state.list.length) {
-      commit(types.REMOVE_AT, index)
+  remove ({ state, commit }, id) {
+    const index = state.list.findIndex(clip => clip.id === id)
+    console.log('remove', index)
+    if (index === 0 && state.list.length > 1) {
+      clipboard.writeText(state.list[1].text)
+    } else if (state.list.length === 1) {
+      console.log('write nill')
+      clipboard.writeText('')
     }
-    if (state.cursor >= state.list.length) {
-      commit(types.SET_CURSOR, state.list.length - 1)
-    }
-    if (state.list.length > 0) {
-      commit(types.SET_SELECTED, { index: state.cursor, selected: true })
-    }
-    if (index === 0 || index === false || state.list.length === 0) {
-      // Temporary: always write first list item if removing selected items
-      const text = state.list.length > 0 ? state.list[0].text : ''
-      clipboard.writeText(text)
-    }
+    // if (index === 0 || state.list.length === 1) {
+    //   const text = state.list.length > 0 ? state.list[0].text : ''
+    //   console.log()
+    //   clipboard.writeText(text)
+    // }
+    commit(types.REMOVE, index)
+    // if (index === 0 || index === false || state.list.length === 0) {
+    //   // Temporary: always write first list item if removing selected items
+    //   const text = state.list.length > 0 ? state.list[0].text : ''
+    //   clipboard.writeText(text)
+    // }
+    // if (index === false) {
+    //   commit(types.REMOVE_SELECTED)
+    // } else if (index > -1 && index < state.list.length) {
+    //   commit(types.REMOVE_AT, index)
+    // }
+    // if (state.cursor >= state.list.length) {
+    //   commit(types.SET_CURSOR, state.list.length - 1)
+    // }
+    // if (state.list.length > 0) {
+    //   commit(types.SET_SELECTED, { index: state.cursor, selected: true })
+    // }
+    // if (index === 0 || index === false || state.list.length === 0) {
+    //   // Temporary: always write first list item if removing selected items
+    //   const text = state.list.length > 0 ? state.list[0].text : ''
+    //   clipboard.writeText(text)
+    // }
   },
   promote ({ state, dispatch, commit }, index) {
     if (index === 0) {
