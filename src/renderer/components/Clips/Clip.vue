@@ -20,8 +20,19 @@ const props = {
   }
 }
 
+const methods = {
+  blur () {
+    this.$el.blur()
+  },
+  focus () {
+    this.$el.focus()
+    this.$el.scrollIntoView(false)
+  }
+}
+
 export default {
   name,
-  props
+  props,
+  methods
 }
 </script>
