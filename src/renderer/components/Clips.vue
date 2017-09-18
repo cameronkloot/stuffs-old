@@ -21,6 +21,14 @@
         @clip-remove="clipRemove(index)"
         @clip-click="clipClick($event, index)">
       </Clip>
+      <p id="no-clip-results"
+        v-if="list.length === 0">
+        No clips yet
+      </p>
+      <p id="no-clip-results"
+        v-else-if="filteredList.length === 0">
+        No results
+      </p>
     </div>
   </div>
 </template>
@@ -29,6 +37,9 @@
 import { ipcRenderer } from 'electron'
 import { mapActions, mapGetters } from 'vuex'
 import Clip from './Clips/Clip'
+
+const COMMAND_HEIGHT = 74
+const CLIP_HEIGHT = 48
 
 const DIRECTIONS = {
   UP: -1,
@@ -51,9 +62,15 @@ const computed = {
     'cursor'
   ]),
   filteredList () {
-    return this.list.filter(clip =>
+    const filtered = this.list.filter(clip =>
       clip.text.toLowerCase().includes(this.command.toLowerCase())
     )
+    if (this.mounted === true) {
+      const length = Math.min(filtered.length || 1, 10)
+      const height = (CLIP_HEIGHT * length) + COMMAND_HEIGHT
+      ipcRenderer.send('height', height)
+    }
+    return filtered
   }
 }
 
@@ -134,10 +151,12 @@ export default {
   data () {
     return {
       command: '',
+      mounted: false,
       scrollType: SCROLL.PROGRESS // change to option
     }
   },
   mounted () {
+    this.mounted = true
     this.$refs.command.focus()
 
     ipcRenderer.on('show', (event, message) => {
@@ -149,6 +168,7 @@ export default {
     })
   },
   destroyed () {
+    this.mounted = false
     this.$nextTick(() => {
       window.removeEventListener('keydown', this.keyDown)
     })

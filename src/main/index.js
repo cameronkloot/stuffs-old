@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut } from 'electron' // eslint-disable-line
+import { app, BrowserWindow, globalShortcut, ipcMain } from 'electron' // eslint-disable-line
 
 /**
  * Set `__static` path to static files in production
@@ -8,18 +8,21 @@ if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\') // eslint-disable-line
 }
 
-let mainWindow
+let mainWindow = null
 const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`
+
+const DEFAULT_HEIGHT = 555
+const DEFAULT_WIDTH = 750
 
 function createWindow () {
   /**
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 555,
-    width: 750,
+    height: DEFAULT_HEIGHT,
+    width: DEFAULT_WIDTH,
     frame: false,
     skipTaskbar: true,
     backgroundColor: '#2F3133'
@@ -37,6 +40,12 @@ function createWindow () {
     mainWindow.webContents.send('show', 'window show')
   })
 }
+
+ipcMain.on('height', (event, arg) => {
+  if (mainWindow !== null && arg < DEFAULT_HEIGHT) {
+    mainWindow.setSize(DEFAULT_WIDTH, arg)
+  }
+})
 
 app.on('ready', () => {
   createWindow()
