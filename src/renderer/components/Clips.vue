@@ -58,8 +58,7 @@ const name = 'clips'
 
 const computed = {
   ...mapGetters('clips', [
-    'list',
-    'cursor'
+    'list'
   ]),
   filteredList () {
     const filtered = this.list.filter(clip =>
@@ -78,8 +77,7 @@ const methods = {
   ...mapActions('clips', [
     'add',
     'remove',
-    'exalt',
-    'setCursor'
+    'exalt'
   ]),
   focusCommand () {
     this.$refs.command.focus()
