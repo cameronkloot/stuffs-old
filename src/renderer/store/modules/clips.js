@@ -17,17 +17,21 @@ const mutations = {
   [types.REMOVE] (currentState, index) {
     currentState.list.splice(index, 1)
   },
+  [types.PROMOTE] (currentState, { index, to }) {
+    const clips = currentState.list.splice(index, 1)
+    // console.log(clip)
+    currentState.list.splice(to, 0, ...clips)
+    // currentState.list = [clip, ...currentState.list]
 
-  [types.PROMOTE] (currentState, index) {
-    const selected = []
-    const list = currentState.list.filter((clip) => {
-      if (clip.selected === true) {
-        selected.push(clip)
-        return false
-      }
-      return true
-    })
-    currentState.list = [...selected, ...list]
+    // const selected = []
+    // const list = currentState.list.filter((clip) => {
+    //   if (clip.selected === true) {
+    //     selected.push(clip)
+    //     return false
+    //   }
+    //   return true
+    // })
+    // currentState.list = [...selected, ...list]
   }
 }
 
@@ -55,12 +59,16 @@ const actions = {
     }
     commit(types.REMOVE, index)
   },
-  promote ({ state, dispatch, commit }, index) {
-    if (index === 0) {
-      const clip = state.list.find(c => c.selected === true)
-      clipboard.writeText(clip.text)
+  promote ({ state, commit }, { id, to }) {
+    const index = state.list.findIndex(clip => clip.id === id)
+    if (to === 0) {
+      clipboard.writeText(state.list[index].text)
     }
-    commit(types.PROMOTE, index)  }
+    commit(types.PROMOTE, { index, to })
+  },
+  exalt ({ dispatch }, id) {
+    dispatch('promote', { id, to: 0 })
+  }
 }
 
 const getters = {

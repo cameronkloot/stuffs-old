@@ -110,11 +110,6 @@ const methods = {
     $event.stopPropagation()
     $event.preventDefault()
 
-    const modified = $event.shiftKey || $event.metaKey || $event.ctrlKey
-    if ($event.key === 'Backspace') {
-      this.remove(this.filteredList[index].id)
-    }
-
     let direction = DIRECTIONS.NONE
     if ($event.key === 'Tab') {
       direction = $event.shiftKey === true ? DIRECTIONS.UP : DIRECTIONS.DOWN
@@ -123,8 +118,16 @@ const methods = {
     } else if ($event.key === 'ArrowDown') {
       direction = DIRECTIONS.DOWN
     }
+    let nextIndex = Math.min(index + direction, this.filteredList.length - 1)
 
-    const nextIndex = Math.min(index + direction, this.filteredList.length - 1)
+    const modified = $event.shiftKey || $event.metaKey || $event.ctrlKey
+    if ($event.key === 'Backspace' && modified === false) {
+      this.remove(this.filteredList[index].id)
+    } else if ($event.key === 'Enter' && modified === false) {
+      this.exalt(this.filteredList[index].id)
+      nextIndex = 0
+    }
+
     this.$refs.clips[index].blur()
     if (nextIndex === -1) {
       this.$refs.command.focus()
