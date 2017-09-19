@@ -5,7 +5,8 @@
         placeholder="Type here..."
         v-model="command"
         @keydown.enter="clickAddClip"
-        @keydown="keyDownCommand">
+        @keydown="keyDownCommand"
+        @focus="onCommandFocus">
       </input>
       <button class="add"
         v-show="command.length > 0"
@@ -81,6 +82,9 @@ const methods = {
   ]),
   focusCommand () {
     this.$refs.command.focus()
+  },
+  onCommandFocus () {
+    this.$refs.command.selectionStart = this.command.length
   },
   keyDownCommand ($event) {
     $event.stopPropagation()
