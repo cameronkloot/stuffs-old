@@ -67,14 +67,19 @@ ipcMain.on('height', (event, arg) => {
   }
 })
 
-ipcMain.on('hide', (event, arg) => {
+ipcMain.on('hide', (event, arg = null) => {
   hide()
-  robot.keyTap('v', 'command')
+  if (arg !== null) {
+    setImmediate(() => {
+      // If app icon is visible, requires delay...
+      robot.keyTap('v', 'command')
+    })
+  }
 })
 
 app.on('ready', () => {
   createWindow()
-  app.dock.hide()
+  // app.dock.hide()
 
   // Register a 'CommandOrControl+X' shortcut listener.
   const ret = globalShortcut.register('CommandOrControl+\\', () => {
@@ -92,6 +97,10 @@ app.on('ready', () => {
 
   // Check whether a shortcut is registered.
   console.log(globalShortcut.isRegistered('CommandOrControl+\\'))
+})
+
+app.on('activate', () => {
+  show()
 })
 
 app.on('will-quit', () => {

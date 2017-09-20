@@ -168,7 +168,7 @@ const methods = {
         this.exalt(clip.id)
         this.$refs.clips[0].focus()
         setTimeout(() => {
-          ipcRenderer.send('hide')
+          ipcRenderer.send('hide', clip.text)
         }, 100)
       }
     }
