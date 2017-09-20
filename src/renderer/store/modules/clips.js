@@ -43,6 +43,9 @@ const actions = {
     }
     if (clip.source !== 'clipboard') {
       clipboard.writeText(clip.text)
+      if (clipboard.readText() !== clip.text) {
+        console.log('There was a problem with the clipboard')
+      }
     }
     commit(types.ADD, {
       id: uuidv4(),
@@ -62,7 +65,12 @@ const actions = {
   promote ({ state, commit }, { id, to }) {
     const index = state.list.findIndex(clip => clip.id === id)
     if (to === 0) {
-      clipboard.writeText(state.list[index].text)
+      const clip = state.list[index]
+      clipboard.writeText(clip.text)
+      console.log(clipboard.readText())
+      if (clipboard.readText() !== clip.text) {
+        console.log('There was a problem with the clipboard')
+      }
     }
     commit(types.PROMOTE, { index, to })
   },

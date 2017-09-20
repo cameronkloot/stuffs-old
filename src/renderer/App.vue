@@ -20,10 +20,40 @@ export default {
   name,
   methods,
   mounted () {
-    const thisContext = this
+    const context = this
+    let lastText = clipboard.readText()
+    let lastImage = clipboard.readImage()
+    let lastImageDataUrl = lastImage.toDataURL()
+    let lastImageSize = lastImage.getSize()
+
+    const checkImage = (image) => {
+      const size = image.getSize()
+      return size.width !== lastImageSize.width && size.height !== lastImageSize.height
+    }
+
     setInterval(() => {
       const text = clipboard.readText()
-      thisContext.add({ text, source: 'clipboard' })
+      const image = clipboard.readImage()
+
+      if (image.isEmpty() === false && checkImage(image) === false) {
+        console.log(image)
+        context.add({
+          text,
+          image,
+          type: 'image',
+          source: 'clipboard'
+        })
+        lastImage = image
+        lastImageDataUrl = image.toDataURL()
+        lastImageSize = image.getSize()
+      } else if (text && text !== lastText) {
+        context.add({
+          text,
+          type: 'text',
+          source: 'clipboard'
+        })
+        lastText = text
+      }
     }, 100)
   }
 }

@@ -88,6 +88,12 @@ const methods = {
   },
   keyDownCommand ($event) {
     $event.stopPropagation()
+    $event.preventDefault()
+    // Replace with window event, only stop propagation if keys are handled in method
+    // or maybe handle generally for each key event
+    if ($event.key === 'Escape') {
+      ipcRenderer.send('hide')
+    }
     if ($event.key === 'ArrowDown' && this.filteredList.length > 0) {
       this.$refs.command.blur()
       this.$refs.clips[0].$el.focus()
@@ -113,6 +119,9 @@ const methods = {
   keyDownClip ($event, index) {
     $event.stopPropagation()
     $event.preventDefault()
+    if ($event.key === 'Escape') { // mixin key events?
+      ipcRenderer.send('hide')
+    }
 
     let direction = DIRECTIONS.NONE
     if ($event.key === 'Tab') {
@@ -125,11 +134,17 @@ const methods = {
     let nextIndex = Math.min(index + direction, this.filteredList.length - 1)
 
     const modified = $event.shiftKey || $event.metaKey || $event.ctrlKey
-    if ($event.key === 'Backspace' && modified === false) {
+    if ((this.justShown === true && $event.key === 'Backspace' && $event.metaKey === true) ||
+      $event.key === 'Backspace' && modified === false) {
       this.remove(this.filteredList[index].id)
-    } else if ($event.key === 'Enter' && modified === false) {
+
+      this.justShown = false // disables auto-select and hide
+    } else if ((this.justShown === true && $event.key === 'Enter' && $event.metaKey === true) ||
+      $event.key === 'Enter' && modified === false) {
       this.exalt(this.filteredList[index].id)
       nextIndex = 0
+
+      this.justShown = false // disables auto-select and hide
     }
 
     this.$refs.clips[index].blur()
@@ -138,9 +153,25 @@ const methods = {
     } else {
       this.$refs.clips[nextIndex].focus()
     }
+    this.currentIndex = nextIndex
   },
   keyDown ($event) {
 
+  },
+  keyUp ($event) {
+    if (this.justShown === true && $event.key === 'Meta') {
+      $event.stopPropagation()
+      $event.preventDefault()
+      this.justShown = false
+      if (this.filteredList.length > 0) {
+        const clip = this.filteredList[this.currentIndex]
+        this.exalt(clip.id)
+        this.$refs.clips[0].focus()
+        setTimeout(() => {
+          ipcRenderer.send('hide')
+        }, 200)
+      }
+    }
   }
 }
 
@@ -157,6 +188,8 @@ export default {
     return {
       command: '',
       mounted: false,
+      justShown: false,
+      currentIndex: -1,
       scrollType: SCROLL.PROGRESS // change to option
     }
   },
@@ -165,17 +198,24 @@ export default {
     this.$refs.command.focus()
 
     ipcRenderer.on('show', (event, message) => {
-      this.$refs.command.focus()
+      this.justShown = true
+      if (this.filteredList.length > 0) {
+        this.$refs.clips[0].focus()
+      } else {
+        this.$refs.command.focus()
+      }
     })
 
     this.$nextTick(() => {
       window.addEventListener('keydown', this.keyDown)
+      window.addEventListener('keyup', this.keyUp)
     })
   },
   destroyed () {
     this.mounted = false
     this.$nextTick(() => {
       window.removeEventListener('keydown', this.keyDown)
+      window.removeEventListener('keyup', this.keyUp)
     })
   }
 }

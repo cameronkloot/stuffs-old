@@ -16,6 +16,20 @@ const winURL = process.env.NODE_ENV === 'development'
 const DEFAULT_HEIGHT = 555
 const DEFAULT_WIDTH = 750
 
+const show = () => {
+  app.show()
+  mainWindow.show()
+  mainWindow.focus()
+}
+
+const hide = () => {
+  if (mainWindow !== null) {
+    mainWindow.hide()
+    mainWindow.blur()
+  }
+  app.hide()
+}
+
 function createWindow () {
   /**
    * Initial window options
@@ -25,7 +39,8 @@ function createWindow () {
     width: DEFAULT_WIDTH,
     frame: false,
     skipTaskbar: true,
-    backgroundColor: '#2F3133'
+    backgroundColor: '#2F3133',
+    alwaysOnTop: true
     // focusable: false
   })
 
@@ -39,6 +54,10 @@ function createWindow () {
     console.log('show')
     mainWindow.webContents.send('show', 'window show')
   })
+
+  mainWindow.on('blur', () => {
+    hide()
+  })
 }
 
 ipcMain.on('height', (event, arg) => {
@@ -47,17 +66,21 @@ ipcMain.on('height', (event, arg) => {
   }
 })
 
+ipcMain.on('hide', (event, arg) => {
+  hide()
+})
+
 app.on('ready', () => {
   createWindow()
-  // app.dock.hide()
+  app.dock.hide()
 
   // Register a 'CommandOrControl+X' shortcut listener.
-  const ret = globalShortcut.register('CommandOrControl+]', () => {
-    console.log('CommandOrControl+X is pressed')
+  const ret = globalShortcut.register('CommandOrControl+\\', () => {
+    console.log('CommandOrControl+\\ is pressed')
     if (mainWindow.isVisible()) {
-      mainWindow.hide()
+      hide()
     } else {
-      mainWindow.show()
+      show()
     }
   })
 
@@ -66,7 +89,7 @@ app.on('ready', () => {
   }
 
   // Check whether a shortcut is registered.
-  console.log(globalShortcut.isRegistered('CommandOrControl+]'))
+  console.log(globalShortcut.isRegistered('CommandOrControl+\\'))
 })
 
 app.on('will-quit', () => {
