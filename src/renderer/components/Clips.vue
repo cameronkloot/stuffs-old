@@ -141,9 +141,13 @@ const methods = {
       this.justShown = false // disables auto-select and hide
     } else if ((this.justShown === true && $event.key === 'Enter' && $event.metaKey === true) ||
       $event.key === 'Enter' && modified === false) {
-      this.exalt(this.filteredList[index].id)
-      nextIndex = 0
-
+      const clip = this.filteredList[index]
+      if (this.currentIndex === 0 && index === 0) {
+        ipcRenderer.send('hide', clip.text)
+      } else {
+        this.exalt(clip.id)
+        nextIndex = 0
+      }
       this.justShown = false // disables auto-select and hide
     }
 
