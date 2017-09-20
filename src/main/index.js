@@ -99,10 +99,6 @@ app.on('ready', () => {
   console.log(globalShortcut.isRegistered('CommandOrControl+\\'))
 })
 
-app.on('activate', () => {
-  show()
-})
-
 app.on('will-quit', () => {
   // Unregister a shortcut.
   globalShortcut.unregister('CommandOrControl+]')
@@ -120,6 +116,8 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
+  } else {
+    show()
   }
 })
 

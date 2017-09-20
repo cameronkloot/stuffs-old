@@ -88,11 +88,11 @@ const methods = {
   },
   keyDownCommand ($event) {
     $event.stopPropagation()
-    $event.preventDefault()
     // Replace with window event, only stop propagation if keys are handled in method
     // or maybe handle generally for each key event
     if ($event.key === 'Escape') {
       ipcRenderer.send('hide')
+      $event.preventDefault()
     }
     if ($event.key === 'ArrowDown' && this.filteredList.length > 0) {
       this.$refs.command.blur()
@@ -146,6 +146,7 @@ const methods = {
         ipcRenderer.send('hide', clip.text)
       } else {
         this.exalt(clip.id)
+        this.command = ''
         nextIndex = 0
       }
       this.justShown = false // disables auto-select and hide
