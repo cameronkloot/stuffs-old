@@ -163,13 +163,13 @@ const methods = {
       $event.stopPropagation()
       $event.preventDefault()
       this.justShown = false
-      if (this.filteredList.length > 0) {
+      if (this.filteredList.length > 0 && this.currentIndex > -1) {
         const clip = this.filteredList[this.currentIndex]
         this.exalt(clip.id)
         this.$refs.clips[0].focus()
         setTimeout(() => {
           ipcRenderer.send('hide')
-        }, 200)
+        }, 100)
       }
     }
   }

@@ -1,4 +1,5 @@
 import { app, BrowserWindow, globalShortcut, ipcMain } from 'electron' // eslint-disable-line
+import robot from 'robotjs'
 
 /**
  * Set `__static` path to static files in production
@@ -68,6 +69,7 @@ ipcMain.on('height', (event, arg) => {
 
 ipcMain.on('hide', (event, arg) => {
   hide()
+  robot.keyTap('v', 'command')
 })
 
 app.on('ready', () => {
