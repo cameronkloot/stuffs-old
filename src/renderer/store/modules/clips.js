@@ -66,8 +66,14 @@ const actions = {
     const index = state.list.findIndex(clip => clip.id === id)
     if (to === 0) {
       const clip = state.list[index]
-      clipboard.writeText(clip.text)
-      console.log(clipboard.readText())
+      if (clip.type === 'text') {
+        clipboard.writeText(clip.text)
+      } else if (clip.type === 'image') {
+        clipboard.write({
+          text: clip.text,
+          image: clip.image
+        }, 'image')
+      }
       if (clipboard.readText() !== clip.text) {
         console.log('There was a problem with the clipboard')
       }

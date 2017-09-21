@@ -28,15 +28,13 @@ export default {
 
     const checkImage = (image) => {
       const size = image.getSize()
-      return size.width !== lastImageSize.width && size.height !== lastImageSize.height
+      return size.width !== lastImageSize.width && size.height !== lastImageSize.height // add data url check if size matches
     }
 
     setInterval(() => {
       const text = clipboard.readText()
       const image = clipboard.readImage()
-
-      if (image.isEmpty() === false && checkImage(image) === false) {
-        console.log(image)
+      if (image.isEmpty() === false && checkImage(image) === true) {
         context.add({
           text,
           image,

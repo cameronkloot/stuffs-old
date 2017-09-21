@@ -203,6 +203,8 @@ export default {
     this.$refs.command.focus()
 
     ipcRenderer.on('show', (event, message) => {
+      // Check for meta/cmd key state via down and up handlers
+      // set the meta/cmd state to down if show is run
       this.justShown = true
       if (this.filteredList.length > 0) {
         this.$refs.clips[0].focus()
