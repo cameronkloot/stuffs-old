@@ -77,6 +77,8 @@ ipcMain.on('hide', (event, arg = null) => {
   }
 })
 
+app.dock.setIcon(`${__static}/egg.png`)
+
 app.on('ready', () => {
   createWindow()
   // app.dock.hide()
