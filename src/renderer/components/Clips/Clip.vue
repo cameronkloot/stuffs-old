@@ -2,7 +2,8 @@
   <div ref="clip" class="clip" tabindex="-1"
     :data-selected="clip.selected"
     @keydown="$emit('clip-keydown', $event)"
-    @click="$emit('clip-click', $event)">
+    @click="$emit('clip-click', $event)"
+    @dblclick="$emit('clip-double-click', $event)">
     <span class="text truncate">{{ clip.text }}</span>
     <span class="buttons">
       <button class="remove" @click="$emit('clip-remove')">X</button>

@@ -20,7 +20,8 @@
         :clip="clip"
         @clip-keydown="keyDownClip($event, index)"
         @clip-remove="clipRemove(index)"
-        @clip-click="clipClick($event, index)">
+        @clip-click="clipClick($event, index)"
+        @clip-double-click="clipDoubleClick($event, index)">
       </Clip>
       <p id="no-clip-results"
         v-if="list.length === 0">
@@ -115,6 +116,11 @@ const methods = {
     $event.stopPropagation()
     $event.preventDefault()
     this.$refs.clips[index].$el.focus()
+  },
+  clipDoubleClick ($event, index) {
+    const clip = this.filteredList[index]
+    this.exalt(clip.id)
+    this.$refs.clips[0].focus()
   },
   keyDownClip ($event, index) {
     $event.stopPropagation()
