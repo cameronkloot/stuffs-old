@@ -1,4 +1,11 @@
-import { app, BrowserWindow, globalShortcut, ipcMain } from 'electron' // eslint-disable-line
+import {
+  app,
+  BrowserWindow,
+  globalShortcut,
+  ipcMain,
+  Tray,
+  Menu
+} from 'electron' // eslint-disable-line
 import robot from 'robotjs'
 
 /**
@@ -41,7 +48,8 @@ function createWindow () {
     frame: false,
     skipTaskbar: true,
     backgroundColor: '#2F3133',
-    alwaysOnTop: true
+    alwaysOnTop: true,
+    title: 'Stuffs'
     // focusable: false
   })
 
@@ -77,11 +85,31 @@ ipcMain.on('hide', (event, arg = null) => {
   }
 })
 
-app.dock.setIcon(`${__static}/egg.png`)
-
 app.on('ready', () => {
   createWindow()
   // app.dock.hide()
+
+  app.dock.setIcon(`${__static}/egg.png`)
+
+  const disableToolbar = true
+  if (process.platform === 'darwin' && disableToolbar !== true) {
+    const tray = new Tray(`${__static}/trayIcon.png`)
+    tray.setPressedImage(`${__static}/trayIconHighlight.png`)
+    const contextMenu = Menu.buildFromTemplate([
+      {
+        label: 'Show in Dock',
+        type: 'checkbox',
+        click ($event) {
+          console.log('item1 click', $event)
+        }
+      }
+    ])
+    tray.setToolTip('A place for all your stuffs.')
+    tray.setContextMenu(contextMenu)
+    // tray.on('click', () => {
+    //   show()
+    // })
+  }
 
   // Register a 'CommandOrControl+X' shortcut listener.
   const ret = globalShortcut.register('CommandOrControl+\\', () => {
