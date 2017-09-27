@@ -14,10 +14,11 @@ html {
 
 body {
   font-family: 'Roboto Mono', monospace;
-  font-weight: 300;
+  font-weight: 400;
   color: #DADDD8;
   font-size: 1rem;
   user-select: none;
+  -webkit-font-smoothing: antialiased;
 }
 
 p {
