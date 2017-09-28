@@ -50,6 +50,7 @@ const actions = {
     commit(types.ADD, {
       id: uuidv4(),
       selected: false,
+      length: clip.text.length,
       ...clip
     })
   },

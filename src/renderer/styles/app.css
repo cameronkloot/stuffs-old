@@ -34,6 +34,11 @@ h6 {
   margin: 0 0 1rem;
 }
 
+code, kbd, pre, samp {
+  font-family: inherit;
+  font-size: inherit;
+}
+
 input {
   border: none;
   outline: none;
@@ -85,6 +90,7 @@ button:hover {
   width: 100%;
   padding: 1.5rem;
   font-size: 1.25rem;
+  border-bottom: 1px solid #4c4340;
 }
 
 #clips .add {
@@ -97,6 +103,7 @@ button:hover {
 #clips .clips-container {
   overflow: auto;
   flex: 1;
+  margin-top: -1px;
 }
 
 #clips .clips-container[data-scroll-type="PROGRESS"]::-webkit-scrollbar {
@@ -118,6 +125,10 @@ button:hover {
   outline: none;
 }
 
+#clips .clip { /* Add class */
+  padding: 0 0 .1rem;
+}
+
 #clips .clip:focus {
   background-color: #4c4340;
 }
@@ -133,9 +144,23 @@ button:hover {
 
 #clips .clip .buttons {
   align-self: flex-end;
+  display: flex;
 }
 
-#clips .clip .buttons .remove {
+#clips .clip .buttons * {
+  align-self: flex-end;
+}
+
+#clips .clip pre.text {
+  margin: 0;
+}
+
+#clips .clip .buttons .length {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+#clips .clip .buttons {
   margin-bottom: 2px;
 }
 

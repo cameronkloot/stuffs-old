@@ -4,8 +4,10 @@
     @keydown="$emit('clip-keydown', $event)"
     @click="$emit('clip-click', $event)"
     @dblclick="$emit('clip-double-click', $event)">
-    <span class="text truncate">{{ clip.text }}</span>
+    <pre v-if="textType === 'pre'" class="text">{{ clip.text }}</pre>
+    <span v-else class="text truncate">{{ clip.text }}</span>
     <span class="buttons">
+      <span class="length">{{ clip.text.length }}</span>
       <button class="remove" @click="$emit('clip-remove')">X</button>
     </span>
   </div>
@@ -34,6 +36,11 @@ const methods = {
 export default {
   name,
   props,
-  methods
+  methods,
+  data () {
+    return {
+      textType: '' // 'pre'
+    }
+  }
 }
 </script>

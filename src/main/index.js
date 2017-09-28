@@ -78,10 +78,10 @@ ipcMain.on('height', (event, arg) => {
 ipcMain.on('hide', (event, arg = null) => {
   hide()
   if (arg !== null) {
-    setImmediate(() => {
+    setTimeout(() => {
       // If app icon is visible, requires delay...
       robot.keyTap('v', 'command')
-    })
+    }, 50)
   }
 })
 

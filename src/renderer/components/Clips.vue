@@ -86,18 +86,21 @@ const methods = {
   },
   onCommandFocus () {
     this.$refs.command.selectionStart = this.command.length
+    this.justShown = false // disables auto-select and hide
   },
   keyDownCommand ($event) {
-    $event.stopPropagation()
     // Replace with window event, only stop propagation if keys are handled in method
     // or maybe handle generally for each key event
     if ($event.key === 'Escape') {
       ipcRenderer.send('hide')
+      $event.stopPropagation()
       $event.preventDefault()
     }
     if ($event.key === 'ArrowDown' && this.filteredList.length > 0) {
       this.$refs.command.blur()
       this.$refs.clips[0].$el.focus()
+      $event.stopPropagation()
+      $event.preventDefault()
     }
   },
   clickAddClip () {
@@ -170,7 +173,8 @@ const methods = {
 
   },
   keyUp ($event) {
-    if (this.justShown === true && $event.key === 'Meta') {
+    const disableQuick = true
+    if (this.justShown === true && $event.key === 'Meta' && disableQuick === false) {
       $event.stopPropagation()
       $event.preventDefault()
       this.justShown = false
