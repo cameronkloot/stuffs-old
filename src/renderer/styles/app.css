@@ -126,7 +126,7 @@ button:hover {
 }
 
 #clips .clip { /* Add class */
-  padding: 0 0 .1rem;
+  /* padding: 0 0 .1rem; */
 }
 
 #clips .clip:focus {
@@ -153,6 +153,11 @@ button:hover {
 
 #clips .clip pre.text {
   margin: 0;
+}
+
+#clips .clip .text a,
+#clips .clip[data-filtering="true"] .text b.highlight {
+  color:#b3897b;
 }
 
 #clips .clip .buttons .length {

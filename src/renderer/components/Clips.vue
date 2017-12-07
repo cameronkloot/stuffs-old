@@ -3,10 +3,10 @@
     <div class="header">
       <input ref="command" class="command" type="text"
         placeholder="Type here..."
-        v-model="command"
         @keydown.enter="clickAddClip"
         @keydown="keyDownCommand"
-        @focus="onCommandFocus">
+        @focus="onCommandFocus"
+        v-model="command">
       </input>
       <button class="add"
         v-show="command.length > 0"
@@ -18,6 +18,7 @@
       <Clip ref="clips"
         v-for="(clip, index) in filteredList" :key="index"
         :clip="clip"
+        :command="command"
         @clip-keydown="keyDownClip($event, index)"
         @clip-remove="clipRemove(index)"
         @clip-click="clipClick($event, index)"
@@ -64,14 +65,14 @@ const computed = {
   ]),
   filteredList () {
     const filtered = this.list.filter(clip =>
-      clip.text.toLowerCase().includes(this.command.toLowerCase())
+      clip.text.toLowerCase().includes(this.filter.toLowerCase())
     )
     if (this.mounted === true) {
       const length = Math.min(filtered.length || 1, 10)
       const height = (CLIP_HEIGHT * length) + COMMAND_HEIGHT
       ipcRenderer.send('height', height)
     }
-    return filtered
+    return filtered.slice(0, 100)
   }
 }
 
@@ -88,10 +89,20 @@ const methods = {
     this.$refs.command.selectionStart = this.command.length
     this.justShown = false // disables auto-select and hide
   },
+  updateCommand () {
+    if (this.updatingCommand === null) {
+      const self = this
+      this.updatingCommand = setTimeout(() => {
+        self.filter = self.command
+        self.updatingCommand = null
+      }, 500)
+    }
+  },
   keyDownCommand ($event) {
     // Replace with window event, only stop propagation if keys are handled in method
     // or maybe handle generally for each key event
     if ($event.key === 'Escape') {
+      this.command = ''
       ipcRenderer.send('hide')
       $event.stopPropagation()
       $event.preventDefault()
@@ -102,6 +113,7 @@ const methods = {
       $event.stopPropagation()
       $event.preventDefault()
     }
+    this.updateCommand()
   },
   clickAddClip () {
     if (this.command.trim().length > 0) {
@@ -201,6 +213,8 @@ export default {
   components,
   data () {
     return {
+      updatingCommand: null,
+      filter: '',
       command: '',
       mounted: false,
       justShown: false,
