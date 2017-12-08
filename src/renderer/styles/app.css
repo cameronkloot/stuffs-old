@@ -119,10 +119,12 @@ button:hover {
 #clips .clip {
   padding: 0.75rem 1rem;
   border-top: 1px solid #4c4340;
+  border-bottom: 1px solid #4c4340;
   display: flex;
   justify-content: space-between;
   cursor: pointer;
   outline: none;
+  margin-bottom: -1px;
 }
 
 #clips .clip { /* Add class */
@@ -130,6 +132,11 @@ button:hover {
 }
 
 #clips .clip:focus {
+  background-color: #5f5856!important;
+  border-color: #5f5856!important;
+}
+
+#clips .clip[data-selected="true"] {
   background-color: #4c4340;
 }
 

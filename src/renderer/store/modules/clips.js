@@ -32,6 +32,12 @@ const mutations = {
     //   return true
     // })
     // currentState.list = [...selected, ...list]
+  },
+  [types.SET_SELECTED] (currentState, index) {
+    currentState.list[index].selected = true
+  },
+  [types.UNSET_SELECTED] (currentState, index) {
+    currentState.list[index].selected = false
   }
 }
 
@@ -83,6 +89,12 @@ const actions = {
   },
   exalt ({ dispatch }, id) {
     dispatch('promote', { id, to: 0 })
+  },
+  setSelected ({ commit }, index) {
+    commit(types.SET_SELECTED, index)
+  },
+  unsetSelected ({ commit }, index) {
+    commit(types.UNSET_SELECTED, index)
   }
 }
 

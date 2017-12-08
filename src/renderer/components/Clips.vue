@@ -80,7 +80,9 @@ const methods = {
   ...mapActions('clips', [
     'add',
     'remove',
-    'exalt'
+    'exalt',
+    'setSelected',
+    'unsetSelected'
   ]),
   focusCommand () {
     this.$refs.command.focus()
@@ -145,9 +147,7 @@ const methods = {
     }
 
     let direction = DIRECTIONS.NONE
-    if ($event.key === 'Tab') {
-      direction = $event.shiftKey === true ? DIRECTIONS.UP : DIRECTIONS.DOWN
-    } else if ($event.key === 'ArrowUp') {
+    if ($event.key === 'ArrowUp') {
       direction = DIRECTIONS.UP
     } else if ($event.key === 'ArrowDown') {
       direction = DIRECTIONS.DOWN
@@ -173,7 +173,15 @@ const methods = {
       this.justShown = false // disables auto-select and hide
     }
 
-    this.$refs.clips[index].blur()
+    if ($event.shiftKey === true) {
+      this.setSelected(index)
+    } else {
+      this.filteredList.forEach((v, i) => {
+        if (v.selected === true) {
+          this.unsetSelected(i)
+        }
+      })
+    }
     if (nextIndex === -1) {
       this.$refs.command.focus()
     } else {
@@ -185,7 +193,7 @@ const methods = {
 
   },
   keyUp ($event) {
-    const disableQuick = true
+    const disableQuick = false
     if (this.justShown === true && $event.key === 'Meta' && disableQuick === false) {
       $event.stopPropagation()
       $event.preventDefault()
@@ -229,12 +237,17 @@ export default {
     ipcRenderer.on('show', (event, message) => {
       // Check for meta/cmd key state via down and up handlers
       // set the meta/cmd state to down if show is run
+      console.log('show')
       this.justShown = true
       if (this.filteredList.length > 0) {
         this.$refs.clips[0].focus()
       } else {
         this.$refs.command.focus()
       }
+    })
+
+    ipcRenderer.on('copycopy', (event, message) => {
+      console.log('copy copy from client')
     })
 
     this.$nextTick(() => {
