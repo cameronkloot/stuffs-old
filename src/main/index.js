@@ -85,6 +85,17 @@ ipcMain.on('hide', (event, arg = null) => {
   }
 })
 
+const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
+  // Someone tried to run a second instance, we should focus our window.
+  if (mainWindow) {
+    show()
+  }
+})
+
+if (isSecondInstance) {
+  app.quit()
+}
+
 app.on('ready', () => {
   createWindow()
   // app.dock.hide()
