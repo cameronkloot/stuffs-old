@@ -42,7 +42,7 @@ import { mapActions, mapGetters } from 'vuex'
 import Clip from './Clips/Clip'
 
 const COMMAND_HEIGHT = 74
-const CLIP_HEIGHT = 48
+const CLIP_HEIGHT = 46
 
 const DIRECTIONS = {
   UP: -1,
