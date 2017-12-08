@@ -37,10 +37,12 @@ const mutations = {
     // })
     // currentState.list = [...selected, ...list]
   },
-  [types.SET_SELECTED] (currentState, index) {
+  [types.SET_SELECTED] (currentState, id) {
+    const index = currentState.list.findIndex(clip => clip.id === id)
     currentState.list[index].selected = true
   },
-  [types.UNSET_SELECTED] (currentState, index) {
+  [types.UNSET_SELECTED] (currentState, id) {
+    const index = currentState.list.findIndex(clip => clip.id === id)
     currentState.list[index].selected = false
   }
 }
@@ -98,11 +100,11 @@ const actions = {
   exalt ({ dispatch }, id) {
     dispatch('promote', { id, to: 0 })
   },
-  setSelected ({ commit }, index) {
-    commit(types.SET_SELECTED, index)
+  setSelected ({ commit }, id) {
+    commit(types.SET_SELECTED, id)
   },
-  unsetSelected ({ commit }, index) {
-    commit(types.UNSET_SELECTED, index)
+  unsetSelected ({ commit }, id) {
+    commit(types.UNSET_SELECTED, id)
   }
 }
 

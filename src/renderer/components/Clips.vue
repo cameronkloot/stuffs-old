@@ -21,7 +21,7 @@
         :command="command"
         @clip-keydown="keyDownClip($event, index)"
         @clip-remove="clipRemove(index)"
-        @clip-click="clipClick($event, index)"
+        @clip-click="clipClick($event, clip, index)"
         @clip-double-click="clipDoubleClick($event, index)">
       </Clip>
       <p id="no-clip-results"
@@ -100,7 +100,7 @@ const methods = {
     this.updatingCommand = setTimeout(() => {
       self.filter = self.command
       clearTimeout(self.updatingCommand)
-    }, 500)
+    }, 200)
   },
   keyDownCommand ($event) {
     // Replace with window event, only stop propagation if keys are handled in method
@@ -131,10 +131,19 @@ const methods = {
   clipRemove (index) {
     this.remove(this.filteredList[index].id)
   },
-  clipClick ($event, index) {
+  clipClick ($event, clip, index) {
     $event.stopPropagation()
     $event.preventDefault()
     this.$refs.clips[index].$el.focus()
+    if ($event.shiftKey === true) {
+      this.setSelected(clip.id)
+    } else {
+      this.filteredList.forEach((v, i) => {
+        if (v.selected === true) {
+          this.unsetSelected(v.id)
+        }
+      })
+    }
   },
   clipDoubleClick ($event, index) {
     const clip = this.filteredList[index]
@@ -154,6 +163,8 @@ const methods = {
     } else if ($event.key === 'ArrowDown') {
       direction = DIRECTIONS.DOWN
     }
+
+    const clip = this.filteredList[index]
     let nextIndex = Math.min(index + direction, this.filteredList.length - 1)
 
     const modified = $event.shiftKey || $event.metaKey || $event.ctrlKey
@@ -164,26 +175,33 @@ const methods = {
       this.justShown = false // disables auto-select and hide
     } else if ((this.justShown === true && $event.key === 'Enter' && $event.metaKey === true) ||
       $event.key === 'Enter' && modified === false) {
-      const clip = this.filteredList[index]
       if (this.currentIndex === 0 && index === 0) {
-        ipcRenderer.send('hide', clip.text)
+        ipcRenderer.send('hide')
+        ipcRenderer.send('paste')
       } else {
-        this.exalt(clip.id)
+        this.setSelected(clip.id)
+        this.filteredList.reverse().forEach((v) => {
+          if (v.selected === true) {
+            this.exalt(v.id)
+          }
+        })
         this.command = ''
+        this.filter = ''
         nextIndex = 0
       }
       this.justShown = false // disables auto-select and hide
     }
 
     if ($event.shiftKey === true) {
-      this.setSelected(index)
-    } else {
+      this.setSelected(clip.id)
+    } else if ($event.key !== 'Enter') { // don't clear selected if just exalted
       this.filteredList.forEach((v, i) => {
         if (v.selected === true) {
-          this.unsetSelected(i)
+          this.unsetSelected(v.id)
         }
       })
     }
+
     if (nextIndex === -1) {
       this.$refs.command.focus()
     } else {
@@ -195,7 +213,7 @@ const methods = {
 
   },
   keyUp ($event) {
-    const disableQuick = false
+    const disableQuick = true
     if (this.justShown === true && $event.key === 'Meta' && disableQuick === false) {
       $event.stopPropagation()
       $event.preventDefault()

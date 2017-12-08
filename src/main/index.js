@@ -93,12 +93,13 @@ ipcMain.on('height', (event, arg) => {
 
 ipcMain.on('hide', (event, arg = null) => {
   hide()
-  if (arg !== null) {
-    setTimeout(() => {
-      // If app icon is visible, requires delay...
-      robot.keyTap('v', 'command')
-    }, 50)
-  }
+})
+
+ipcMain.on('paste', (event) => {
+  setTimeout(() => {
+    // If app icon is visible, requires delay...
+    robot.keyTap('v', 'command')
+  }, 50)
 })
 
 const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
