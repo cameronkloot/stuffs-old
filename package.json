@@ -1,6 +1,6 @@
 {
   "name": "stuffs",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "cameronkloot <cameronkloot@gmail.com>",
   "description": "A place for all your stuffs",
   "license": null,
@@ -23,7 +23,7 @@
   },
   "build": {
     "productName": "stuffs",
-    "appId": "org.simulatedgreg.electron-vue",
+    "appId": "io.stuffs.dev",
     "directories": {
       "output": "build"
     },
@@ -85,8 +85,8 @@
     "debug-menu": "^0.6.1",
     "del": "^3.0.0",
     "devtron": "^1.4.0",
-    "electron": "^1.7.5",
-    "electron-builder": "^19.19.1",
+    "electron": "1.7.9",
+    "electron-builder": "^19.48.2",
     "electron-debug": "^1.4.0",
     "electron-devtools-installer": "^2.2.0",
     "eslint": "^4.4.1",
