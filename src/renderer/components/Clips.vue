@@ -92,13 +92,14 @@ const methods = {
     this.justShown = false // disables auto-select and hide
   },
   updateCommand () {
-    if (this.updatingCommand === null) {
-      const self = this
-      this.updatingCommand = setTimeout(() => {
-        self.filter = self.command
-        self.updatingCommand = null
-      }, 500)
+    if (this.updatingCommand !== null) {
+      clearTimeout(this.updatingCommand)
     }
+    const self = this
+    this.updatingCommand = setTimeout(() => {
+      self.filter = self.command
+      clearTimeout(self.updatingCommand)
+    }, 500)
   },
   keyDownCommand ($event) {
     // Replace with window event, only stop propagation if keys are handled in method
