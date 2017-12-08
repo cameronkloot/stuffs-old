@@ -8,6 +8,8 @@ import {
 } from 'electron' // eslint-disable-line
 import robot from 'robotjs'
 
+const activeWin = require('active-win')
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -23,6 +25,8 @@ const winURL = process.env.NODE_ENV === 'development'
 
 const DEFAULT_HEIGHT = 555
 const DEFAULT_WIDTH = 750
+
+let currentApp = null
 
 const show = () => {
   app.show()
@@ -60,13 +64,25 @@ function createWindow () {
   })
 
   mainWindow.on('show', () => {
-    console.log('show')
-    mainWindow.webContents.send('show', 'window show')
+    mainWindow.webContents.send('show')
   })
 
   mainWindow.on('blur', () => {
-    hide()
+    activeWin().then((result) => {
+      if (result.app !== 'Electron') { // developer tools
+        hide()
+      }
+    })
   })
+
+  setInterval(() => {
+    activeWin().then((result) => {
+      if (currentApp !== result.app) {
+        currentApp = result.app
+        mainWindow.webContents.send('current-app', currentApp)
+      }
+    })
+  }, 200)
 }
 
 ipcMain.on('height', (event, arg) => {

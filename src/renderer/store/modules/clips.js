@@ -6,10 +6,14 @@ import * as types from '../mutation-types'
 const namespaced = true
 
 const state = {
+  currentApp: '',
   list: []
 }
 
 const mutations = {
+  [types.SET_CURRENT_APP] (currentState, app) {
+    currentState.currentApp = app
+  },
   [types.ADD] (currentState, clip) {
     const list = [clip, ...currentState.list]
     currentState.list = list
@@ -42,6 +46,9 @@ const mutations = {
 }
 
 const actions = {
+  setCurrentApp ({ commit }, app) {
+    commit(types.SET_CURRENT_APP, app)
+  },
   add ({ state, dispatch, commit }, clip) {
     if (clip.text.trim().length === 0 ||
         (state.list.length > 0 && clip.text === state.list[0].text)) {
@@ -57,6 +64,7 @@ const actions = {
       id: uuidv4(),
       selected: false,
       length: clip.text.length,
+      app: state.currentApp,
       ...clip
     })
   },

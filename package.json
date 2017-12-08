@@ -56,6 +56,7 @@
     }
   },
   "dependencies": {
+    "active-win": "^2.0.0",
     "axios": "^0.16.1",
     "lodash": "^4.17.4",
     "robotjs": "^0.4.7",

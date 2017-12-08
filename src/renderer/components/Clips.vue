@@ -78,6 +78,7 @@ const computed = {
 
 const methods = {
   ...mapActions('clips', [
+    'setCurrentApp',
     'add',
     'remove',
     'exalt',
@@ -235,10 +236,14 @@ export default {
     this.mounted = true
     this.$refs.command.focus()
 
+    ipcRenderer.on('current-app', (event, app) => {
+      console.log('app', app)
+      this.setCurrentApp(app)
+    })
+
     ipcRenderer.on('show', (event, message) => {
       // Check for meta/cmd key state via down and up handlers
       // set the meta/cmd state to down if show is run
-      console.log('show')
       this.justShown = true
       if (this.filteredList.length > 0) {
         this.$refs.clips[0].focus()
