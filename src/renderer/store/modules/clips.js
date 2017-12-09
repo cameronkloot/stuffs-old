@@ -62,11 +62,16 @@ const actions = {
         console.log('There was a problem with the clipboard')
       }
     }
+    let category = ''
+    if (clip.text.startsWith('http') || clip.text.startsWith('www') || clip.text.startsWith('localhost')) {
+      category = 'link'
+    }
     commit(types.ADD, {
       id: uuidv4(),
       selected: false,
       length: clip.text.length,
       app: state.currentApp,
+      category,
       ...clip
     })
   },

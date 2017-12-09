@@ -153,8 +153,16 @@ const methods = {
   keyDownClip ($event, index) {
     $event.stopPropagation()
     $event.preventDefault()
-    if ($event.key === 'Escape') { // mixin key events?
+
+    const clip = this.filteredList[index]
+    const modified = $event.shiftKey || $event.metaKey || $event.ctrlKey
+
+    if ($event.code === 'Escape') { // mixin key events?
       ipcRenderer.send('hide')
+    }
+    if ($event.code === 'KeyO') {
+      ipcRenderer.send('open', clip.text)
+      return
     }
 
     let direction = DIRECTIONS.NONE
@@ -164,10 +172,8 @@ const methods = {
       direction = DIRECTIONS.DOWN
     }
 
-    const clip = this.filteredList[index]
     let nextIndex = Math.min(index + direction, this.filteredList.length - 1)
 
-    const modified = $event.shiftKey || $event.metaKey || $event.ctrlKey
     if ((this.justShown === true && $event.key === 'Backspace' && $event.metaKey === true) ||
       $event.key === 'Backspace' && modified === false) {
       this.remove(this.filteredList[index].id)
@@ -195,10 +201,12 @@ const methods = {
     if ($event.shiftKey === true) {
       this.setSelected(clip.id)
     } else if ($event.key !== 'Enter') { // don't clear selected if just exalted
-      this.filteredList.forEach((v, i) => {
-        if (v.selected === true) {
-          this.unsetSelected(v.id)
-        }
+      this.$nextTick(() => {
+        this.filteredList.forEach((v, i) => {
+          if (v.selected === true) {
+            this.unsetSelected(v.id)
+          }
+        })
       })
     }
 
@@ -255,7 +263,6 @@ export default {
     this.$refs.command.focus()
 
     ipcRenderer.on('current-app', (event, app) => {
-      console.log('app', app)
       this.setCurrentApp(app)
     })
 
