@@ -133,9 +133,6 @@ app.on('ready', () => {
 })
 
 app.on('will-quit', () => {
-  // Unregister a shortcut.
-  globalShortcut.unregister('CommandOrControl+]')
-
   // Unregister all shortcuts.
   globalShortcut.unregisterAll()
 })
