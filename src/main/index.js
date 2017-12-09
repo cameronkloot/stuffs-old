@@ -50,11 +50,9 @@ function createWindow () {
     height: DEFAULT_HEIGHT,
     width: DEFAULT_WIDTH,
     frame: false,
-    skipTaskbar: true,
     backgroundColor: '#2F3133',
     alwaysOnTop: true,
     title: 'Stuffs'
-    // focusable: false
   })
 
   mainWindow.loadURL(winURL)
@@ -119,42 +117,19 @@ app.on('ready', () => {
 
   app.dock.setIcon(`${__static}/egg.png`)
 
-  const disableToolbar = true
-  if (process.platform === 'darwin' && disableToolbar !== true) {
-    const tray = new Tray(`${__static}/trayIcon.png`)
-    tray.setPressedImage(`${__static}/trayIconHighlight.png`)
-    const contextMenu = Menu.buildFromTemplate([
-      {
-        label: 'Show in Dock',
-        type: 'checkbox',
-        click ($event) {
-          console.log('item1 click', $event)
-        }
-      }
-    ])
-    tray.setToolTip('A place for all your stuffs.')
-    tray.setContextMenu(contextMenu)
-    // tray.on('click', () => {
-    //   show()
-    // })
-  }
-
   // Register a 'CommandOrControl+X' shortcut listener.
   const ret = globalShortcut.register('CommandOrControl+\\', () => {
-    console.log('CommandOrControl+\\ is pressed')
     if (mainWindow.isVisible()) {
       hide()
     } else {
       show()
     }
   })
-
   if (!ret) {
-    console.log('registration failed')
+    // failed
   }
-
   // Check whether a shortcut is registered.
-  console.log(globalShortcut.isRegistered('CommandOrControl+\\'))
+  // globalShortcut.isRegistered('CommandOrControl+\\')
 })
 
 app.on('will-quit', () => {
