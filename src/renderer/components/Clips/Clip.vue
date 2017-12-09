@@ -7,7 +7,8 @@
     @dblclick="$emit('clip-double-click', $event)">
     <pre v-if="textType === 'pre'" class="text">{{ clip.text }}</pre>
     <span v-else class="text truncate" v-html="clipText"></span>
-    <span class="buttons">
+    <span class="info">
+      <span class="app">{{ clip.app }}|</span>
       <span class="length">{{ clip.text.length }}</span>
       <button class="remove" @click="$emit('clip-remove')">X</button>
     </span>

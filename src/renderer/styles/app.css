@@ -138,12 +138,12 @@ button:hover {
   padding-right: 10px;
 }
 
-#clips .clip .buttons {
+#clips .clip .info {
   align-self: flex-end;
   display: flex;
 }
 
-#clips .clip .buttons * {
+#clips .clip .info * {
   align-self: flex-end;
 }
 
@@ -156,16 +156,30 @@ button:hover {
   color:#b3897b;
 }
 
-#clips .clip .buttons .length {
+#clips .clip .info {
+  background-color: rgba(204, 204, 204, 0.15);
+  border-radius: 2px;
+  padding: 0 4px 2px;
+}
+
+#clips .clip .info .app {
+  font-size: 14px;
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+#clips .clip .info .length {
   font-size: 14px;
   opacity: 0.9;
 }
 
-#clips .clip .buttons {
-  margin-bottom: 2px;
+#clips .clip .info .remove {
+  margin-left: 4px;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
-#clips .clip[data-selected="true"] .buttons .remove:hover {
+#clips .clip[data-selected="true"] .info .remove:hover {
   color: #4c4340;
   background-color: #9C9990;
 }
