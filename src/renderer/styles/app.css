@@ -126,15 +126,11 @@ button:hover {
 }
 
 #clips .clip[data-selected="true"] {
-  background-color: #413835;
+  background-color: #2D2D2A;
 }
 
 #clips .clip:focus {
-  background-color: #4c4340;
-}
-
-#clips .clip:last-child {
-  /* border-bottom-color: #2F3133; */
+  background-color: #413835;
 }
 
 #clips .clip .text {
