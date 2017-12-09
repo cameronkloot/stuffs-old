@@ -9,6 +9,7 @@ import {
 import robot from 'robotjs'
 
 const activeWin = require('active-win')
+const open = require('open')
 
 /**
  * Set `__static` path to static files in production
@@ -89,7 +90,7 @@ ipcMain.on('height', (event, arg) => {
   }
 })
 
-ipcMain.on('hide', (event, arg = null) => {
+ipcMain.on('hide', (event) => {
   hide()
 })
 
@@ -100,8 +101,11 @@ ipcMain.on('paste', (event) => {
   }, 50)
 })
 
+ipcMain.on('open', (event, url) => {
+  open(url)
+})
+
 const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
-  // Someone tried to run a second instance, we should focus our window.
   if (mainWindow) {
     show()
   }
