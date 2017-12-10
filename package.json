@@ -59,6 +59,7 @@
   "dependencies": {
     "active-win": "^2.0.0",
     "axios": "^0.16.1",
+    "font-awesome": "^4.7.0",
     "lodash": "^4.17.4",
     "open": "^0.0.5",
     "robotjs": "^0.4.7",
