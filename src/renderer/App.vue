@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <sidebar></sidebar>
     <router-view></router-view>
   </div>
 </template>
@@ -7,6 +8,7 @@
 <script>
 import { clipboard } from 'electron'
 import { mapActions } from 'vuex'
+import Sidebar from '@/components/Sidebar'
 
 const name = 'stuffs'
 
@@ -16,9 +18,14 @@ const methods = {
   ])
 }
 
+const components = {
+  Sidebar
+}
+
 export default {
   name,
   methods,
+  components,
   mounted () {
     const context = this
     let lastText = clipboard.readText()

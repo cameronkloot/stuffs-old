@@ -68,8 +68,14 @@ button:hover {
 
 #app {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   height: 100vh;
+}
+
+#sidebar {
+  width: 60px;
+  height: 100vh;
+  background-color: #222;
 }
 
 /* Clips */
@@ -78,11 +84,12 @@ button:hover {
   display: flex;
   flex-direction: column;
   flex: 1;
+  height: 100vh;
+  width: calc(100% - 60px);
 }
 
-#clips .header {
+#clips .command-container {
   position: relative;
-  /* height: 100px; */
 }
 
 #clips .command {

@@ -1,6 +1,6 @@
 <template>
   <div id="clips">
-    <div class="header">
+    <div class="command-container">
       <input ref="command" class="command" type="text"
         placeholder="Type here..."
         @keydown.enter="clickAddClip"
