@@ -27,7 +27,7 @@ module.exports = {
     'space-before-function-paren': ['error', 'always'],
     'no-unused-vars': 1,
     'comma-dangle': [2, 'never'],
-    'no-console': 1,
+    'no-console': [1, { allow: ['warn', 'error', 'info'] }],
     'arrow-parens': 1,
     'semi': [2, 'never'],
     'global-require': 0,

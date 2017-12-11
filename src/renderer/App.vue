@@ -30,12 +30,14 @@ export default {
     const context = this
     let lastText = clipboard.readText()
     let lastImage = clipboard.readImage()
-    let lastImageDataUrl = lastImage.toDataURL()
+    // let lastImageDataUrl = lastImage.toDataURL()
     let lastImageSize = lastImage.getSize()
 
     const checkImage = (image) => {
       const size = image.getSize()
-      return size.width !== lastImageSize.width && size.height !== lastImageSize.height // add data url check if size matches
+      // add data url check if size matches
+      return size.width !== lastImageSize.width &&
+        size.height !== lastImageSize.height
     }
 
     setInterval(() => {
@@ -49,7 +51,7 @@ export default {
           source: 'clipboard'
         })
         lastImage = image
-        lastImageDataUrl = image.toDataURL()
+        // lastImageDataUrl = image.toDataURL()
         lastImageSize = image.getSize()
       } else if (text && text !== lastText) {
         context.add({

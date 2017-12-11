@@ -51,7 +51,7 @@ const actions = {
   setCurrentApp ({ commit }, app) {
     commit(types.SET_CURRENT_APP, app)
   },
-  add ({ state, dispatch, commit }, clip) {
+  add ({ state, commit }, clip) {
     if (clip.text.trim().length === 0 ||
         (state.list.length > 0 && clip.text === state.list[0].text)) {
       return
@@ -59,7 +59,7 @@ const actions = {
     if (clip.source !== 'clipboard') {
       clipboard.writeText(clip.text)
       if (clipboard.readText() !== clip.text) {
-        console.log('There was a problem with the clipboard')
+        console.error('There was a problem with the clipboard')
       }
     }
     let category = ''
@@ -97,7 +97,7 @@ const actions = {
         }, 'image')
       }
       if (clipboard.readText() !== clip.text) {
-        console.log('There was a problem with the clipboard')
+        console.error('There was a problem with the clipboard')
       }
     }
     commit(types.PROMOTE, { index, to })

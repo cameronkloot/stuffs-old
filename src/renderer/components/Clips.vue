@@ -138,7 +138,7 @@ const methods = {
     if ($event.shiftKey === true) {
       this.setSelected(clip.id)
     } else {
-      this.filteredList.forEach((v, i) => {
+      this.filteredList.forEach((v) => {
         if (v.selected === true) {
           this.unsetSelected(v.id)
         }
@@ -175,12 +175,12 @@ const methods = {
     let nextIndex = Math.min(index + direction, this.filteredList.length - 1)
 
     if ((this.justShown === true && $event.key === 'Backspace' && $event.metaKey === true) ||
-      $event.key === 'Backspace' && modified === false) {
+      ($event.key === 'Backspace' && modified === false)) {
       this.remove(this.filteredList[index].id)
 
       this.justShown = false // disables auto-select and hide
     } else if ((this.justShown === true && $event.key === 'Enter' && $event.metaKey === true) ||
-      $event.key === 'Enter' && modified === false) {
+      ($event.key === 'Enter' && modified === false)) {
       if (this.currentIndex === 0 && index === 0) {
         ipcRenderer.send('hide')
         ipcRenderer.send('paste')
@@ -202,7 +202,7 @@ const methods = {
       this.setSelected(clip.id)
     } else if ($event.key !== 'Enter') { // don't clear selected if just exalted
       this.$nextTick(() => {
-        this.filteredList.forEach((v, i) => {
+        this.filteredList.forEach((v) => {
           if (v.selected === true) {
             this.unsetSelected(v.id)
           }
@@ -217,9 +217,9 @@ const methods = {
     }
     this.currentIndex = nextIndex
   },
-  keyDown ($event) {
+  // keyDown ($event) {
 
-  },
+  // },
   keyUp ($event) {
     const disableQuick = true
     if (this.justShown === true && $event.key === 'Meta' && disableQuick === false) {
@@ -266,7 +266,7 @@ export default {
       this.setCurrentApp(app)
     })
 
-    ipcRenderer.on('show', (event, message) => {
+    ipcRenderer.on('show', () => {
       // Check for meta/cmd key state via down and up handlers
       // set the meta/cmd state to down if show is run
       this.justShown = true
@@ -277,19 +277,19 @@ export default {
       }
     })
 
-    ipcRenderer.on('copycopy', (event, message) => {
-      console.log('copy copy from client')
+    ipcRenderer.on('copycopy', () => {
+      console.info('copy copy from client')
     })
 
     this.$nextTick(() => {
-      window.addEventListener('keydown', this.keyDown)
+      // window.addEventListener('keydown', this.keyDown)
       window.addEventListener('keyup', this.keyUp)
     })
   },
   destroyed () {
     this.mounted = false
     this.$nextTick(() => {
-      window.removeEventListener('keydown', this.keyDown)
+      // window.removeEventListener('keydown', this.keyDown)
       window.removeEventListener('keyup', this.keyUp)
     })
   }
