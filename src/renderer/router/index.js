@@ -7,8 +7,13 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'main',
-      component: require('@/views/Main')
+      name: 'clips',
+      component: require('@/components/Clips')
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: require('@/components/Settings')
     },
     {
       path: '*',

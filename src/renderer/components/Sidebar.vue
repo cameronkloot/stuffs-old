@@ -1,15 +1,41 @@
 <template>
   <div id="sidebar">
-    <button>
-      <i class="fa fa-plus"></i>
-    </button>
-
+    <div class="buttons-container">
+      <button v-for="route in routes" :key="route.name"
+        :data-active="route.active"
+        @click="changeRoute(route)">
+        <i :class="`fa fa-${route.icon}`"></i>
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
+const methods = {
+  changeRoute (route) {
+    this.routes.forEach((route) => {
+      route.active = false
+    })
+    this.$router.replace({ name: route.name })
+    route.active = true
+  }
+}
 export default {
-
+  methods,
+  data () {
+    return {
+      routes: [
+        {
+          name: 'clips',
+          icon: 'paperclip',
+          active: true
+        }, {
+          name: 'settings',
+          icon: 'cog'
+        }
+      ]
+    }
+  }
 }
 </script>
 
