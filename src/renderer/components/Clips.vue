@@ -103,13 +103,8 @@ const methods = {
     }, 200)
   },
   keyDownCommand ($event) {
-    // Replace with window event, only stop propagation if keys are handled in method
-    // or maybe handle generally for each key event
     if ($event.key === 'Escape') {
       this.command = ''
-      ipcRenderer.send('hide')
-      $event.stopPropagation()
-      $event.preventDefault()
     }
     if ($event.key === 'ArrowDown' && this.filteredList.length > 0) {
       this.$refs.command.blur()
@@ -157,9 +152,6 @@ const methods = {
     const clip = this.filteredList[index]
     const modified = $event.shiftKey || $event.metaKey || $event.ctrlKey
 
-    if ($event.code === 'Escape') { // mixin key events?
-      ipcRenderer.send('hide')
-    }
     if ($event.code === 'KeyO') {
       ipcRenderer.send('open', clip.text)
       return

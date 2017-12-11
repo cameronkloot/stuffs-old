@@ -6,16 +6,15 @@
 </template>
 
 <script>
-
-import clipboardMixin from '@/mixins/clipboard'
+import { clipboard, shortcuts } from '@/mixins'
 import Sidebar from '@/components/Sidebar'
 
 const name = 'stuffs'
 
 const mixins = [
-  clipboardMixin
+  clipboard,
+  shortcuts
 ]
-
 
 const components = {
   Sidebar
@@ -27,6 +26,7 @@ export default {
   components,
   mounted () {
     this.watchClipboard()
+    this.registerShortcuts()
   }
 }
 </script>
