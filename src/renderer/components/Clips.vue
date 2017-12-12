@@ -81,7 +81,6 @@ const computed = {
 
 const methods = {
   ...mapActions('clips', [
-    'setCurrentApp',
     'add',
     'remove',
     'exalt',
@@ -248,10 +247,6 @@ export default {
   mounted () {
     this.mounted = true
     this.$refs.command.focus()
-
-    ipcRenderer.on('current-app', (event, app) => {
-      this.setCurrentApp(app)
-    })
 
     ipcRenderer.on('show', () => {
       // Check for meta/cmd key state via down and up handlers

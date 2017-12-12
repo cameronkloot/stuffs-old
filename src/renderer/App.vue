@@ -21,7 +21,8 @@ const mixins = [
 
 const methods = {
   ...mapActions('window', [
-    'setJustShown'
+    'setJustShown',
+    'setCurrentApp'
   ])
 }
 
@@ -41,6 +42,9 @@ export default {
     // Global
     ipcRenderer.on('show', () => {
       this.setJustShown(true)
+    })
+    ipcRenderer.on('current-app', (event, app) => {
+      this.setCurrentApp(app)
     })
   }
 }
