@@ -27,7 +27,7 @@ const winURL = process.env.NODE_ENV === 'development'
 const DEFAULT_HEIGHT = 555
 const DEFAULT_WIDTH = 750
 
-let currentApp = null
+let activeWindow = null
 
 const show = () => {
   app.show()
@@ -67,18 +67,18 @@ function createWindow () {
   })
 
   mainWindow.on('blur', () => {
-    activeWin().then((result) => {
-      if (result.app !== 'Electron') { // developer tools
+    activeWin().then((win) => {
+      if (win.app !== 'Electron') { // developer tools
         hide()
       }
     })
   })
 
   setInterval(() => {
-    activeWin().then((result) => {
-      if (currentApp !== result.app) {
-        currentApp = result.app
-        mainWindow.webContents.send('current-app', currentApp)
+    activeWin().then((win) => {
+      if (activeWindow !== win) {
+        activeWindow = win
+        mainWindow.webContents.send('active-window', activeWindow)
       }
     })
   }, 200)

@@ -64,7 +64,7 @@ const actions = {
       id: uuidv4(),
       selected: false,
       length: clip.text.length,
-      app: rootState.window.currentApp,
+      window: rootState.window.activeWindow,
       category,
       ...clip
     })

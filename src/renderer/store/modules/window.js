@@ -4,15 +4,15 @@ const namespaced = true
 
 const state = {
   justShown: false,
-  currentApp: ''
+  activeWindow: {}
 }
 
 const mutations = {
   [types.SET_JUST_SHOWN] (state, justShown) {
     state.justShown = justShown
   },
-  [types.SET_CURRENT_APP] (state, app) {
-    state.currentApp = app
+  [types.SET_ACTIVE_WINDOW] (state, win) {
+    state.activeWindow = win
   }
 }
 
@@ -20,8 +20,8 @@ const actions = {
   setJustShown ({ commit }, justShown) {
     commit(types.SET_JUST_SHOWN, justShown)
   },
-  setCurrentApp ({ commit }, app) {
-    commit(types.SET_CURRENT_APP, app)
+  setActiveWindow ({ commit }, win) {
+    commit(types.SET_ACTIVE_WINDOW, win)
   }
 }
 

@@ -8,7 +8,7 @@
     <pre v-if="textType === 'pre'" class="text">{{ clip.text }}</pre>
     <span v-else class="text truncate" v-html="clipText"></span>
     <span class="info">
-      <span class="app" v-if="clip.app">{{ clip.app }}|</span>
+      <span class="app" v-if="clip.window" :title="clip.window.title">{{ clip.window.app }}|</span>
       <span class="length">{{ clip.text.length }}</span>
       <button class="remove" @click="$emit('clip-remove')">X</button>
     </span>
