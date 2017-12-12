@@ -11,36 +11,36 @@ const state = {
 
 const mutations = {
 
-  [types.ADD] (currentState, clip) {
-    const list = [clip, ...currentState.list]
-    currentState.list = list
+  [types.ADD] (state, clip) {
+    const list = [clip, ...state.list]
+    state.list = list
   },
-  [types.REMOVE] (currentState, index) {
-    currentState.list.splice(index, 1)
+  [types.REMOVE] (state, index) {
+    state.list.splice(index, 1)
   },
-  [types.PROMOTE] (currentState, { index, to }) {
-    const clips = currentState.list.splice(index, 1)
+  [types.PROMOTE] (state, { index, to }) {
+    const clips = state.list.splice(index, 1)
     // console.log(clip)
-    currentState.list.splice(to, 0, ...clips)
-    // currentState.list = [clip, ...currentState.list]
+    state.list.splice(to, 0, ...clips)
+    // state.list = [clip, ...state.list]
 
     // const selected = []
-    // const list = currentState.list.filter((clip) => {
+    // const list = state.list.filter((clip) => {
     //   if (clip.selected === true) {
     //     selected.push(clip)
     //     return false
     //   }
     //   return true
     // })
-    // currentState.list = [...selected, ...list]
+    // state.list = [...selected, ...list]
   },
-  [types.SET_SELECTED] (currentState, id) {
-    const index = currentState.list.findIndex(clip => clip.id === id)
-    currentState.list[index].selected = true
+  [types.SET_SELECTED] (state, id) {
+    const index = state.list.findIndex(clip => clip.id === id)
+    state.list[index].selected = true
   },
-  [types.UNSET_SELECTED] (currentState, id) {
-    const index = currentState.list.findIndex(clip => clip.id === id)
-    currentState.list[index].selected = false
+  [types.UNSET_SELECTED] (state, id) {
+    const index = state.list.findIndex(clip => clip.id === id)
+    state.list[index].selected = false
   }
 }
 
@@ -108,8 +108,8 @@ const actions = {
 }
 
 const getters = {
-  list (currentState) {
-    return currentState.list
+  list (state) {
+    return state.list
   }
 }
 
