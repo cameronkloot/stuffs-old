@@ -63,6 +63,9 @@ const computed = {
   ...mapGetters('clips', [
     'list'
   ]),
+  ...mapGetters('window', [
+    'justShown'
+  ]),
   filteredList () {
     const filtered = this.list.filter(clip =>
       clip.text.toLowerCase().includes(this.filter.toLowerCase())
@@ -90,7 +93,6 @@ const methods = {
   },
   onCommandFocus () {
     this.$refs.command.selectionStart = this.command.length
-    this.justShown = false // disables auto-select and hide
   },
   updateCommand () {
     if (this.updatingCommand !== null) {
@@ -169,8 +171,6 @@ const methods = {
     if ((this.justShown === true && $event.key === 'Backspace' && $event.metaKey === true) ||
       ($event.key === 'Backspace' && modified === false)) {
       this.remove(this.filteredList[index].id)
-
-      this.justShown = false // disables auto-select and hide
     } else if ((this.justShown === true && $event.key === 'Enter' && $event.metaKey === true) ||
       ($event.key === 'Enter' && modified === false)) {
       if (this.currentIndex === 0 && index === 0) {
@@ -187,7 +187,6 @@ const methods = {
         this.filter = ''
         nextIndex = 0
       }
-      this.justShown = false // disables auto-select and hide
     }
 
     if ($event.shiftKey === true) {
@@ -209,21 +208,18 @@ const methods = {
     }
     this.currentIndex = nextIndex
   },
-  // keyDown ($event) {
-
-  // },
   keyUp ($event) {
-    const disableQuick = true
+    const disableQuick = false
     if (this.justShown === true && $event.key === 'Meta' && disableQuick === false) {
       $event.stopPropagation()
       $event.preventDefault()
-      this.justShown = false
       if (this.filteredList.length > 0 && this.currentIndex > -1) {
         const clip = this.filteredList[this.currentIndex]
         this.exalt(clip.id)
         this.$refs.clips[0].focus()
         setTimeout(() => {
-          ipcRenderer.send('hide', clip.text)
+          ipcRenderer.send('hide')
+          ipcRenderer.send('paste')
         }, 100)
       }
     }
@@ -245,7 +241,6 @@ export default {
       filter: '',
       command: '',
       mounted: false,
-      justShown: false,
       currentIndex: -1,
       scrollType: SCROLL.PROGRESS // change to option
     }
@@ -261,7 +256,6 @@ export default {
     ipcRenderer.on('show', () => {
       // Check for meta/cmd key state via down and up handlers
       // set the meta/cmd state to down if show is run
-      this.justShown = true
       if (this.filteredList.length > 0) {
         this.$refs.clips[0].focus()
       } else {
@@ -269,19 +263,13 @@ export default {
       }
     })
 
-    ipcRenderer.on('copycopy', () => {
-      console.info('copy copy from client')
-    })
-
     this.$nextTick(() => {
-      // window.addEventListener('keydown', this.keyDown)
       window.addEventListener('keyup', this.keyUp)
     })
   },
   destroyed () {
     this.mounted = false
     this.$nextTick(() => {
-      // window.removeEventListener('keydown', this.keyDown)
       window.removeEventListener('keyup', this.keyUp)
     })
   }
