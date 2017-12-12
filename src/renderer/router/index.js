@@ -7,8 +7,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'clips',
-      component: require('@/components/Clips')
+      name: 'clipboard',
+      component: require('@/components/Clipboard')
     },
     {
       path: '/settings',

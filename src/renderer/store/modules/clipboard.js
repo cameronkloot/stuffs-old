@@ -19,9 +19,9 @@ const mutations = {
     state.list.splice(index, 1)
   },
   [types.PROMOTE] (state, { index, to }) {
-    const clips = state.list.splice(index, 1)
+    const list = state.list.splice(index, 1)
     // console.log(clip)
-    state.list.splice(to, 0, ...clips)
+    state.list.splice(to, 0, ...list)
     // state.list = [clip, ...state.list]
 
     // const selected = []

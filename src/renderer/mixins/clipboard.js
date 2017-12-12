@@ -2,7 +2,7 @@ import { clipboard } from 'electron'
 import { mapActions } from 'vuex'
 
 const methods = {
-  ...mapActions('clips', [
+  ...mapActions('clipboard', [
     'add'
   ]),
   watchClipboard () {
@@ -41,7 +41,6 @@ const methods = {
         lastText = text
       }
     }, 100)
-
   }
 }
 

@@ -94,7 +94,7 @@ button:hover {
 
 /* Clips */
 
-#clips {
+#clipboard {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -102,11 +102,11 @@ button:hover {
   width: calc(100% - 60px);
 }
 
-#clips .command-container {
+#clipboard .command-container {
   position: relative;
 }
 
-#clips .command {
+#clipboard .command {
   display: block;
   width: 100%;
   padding: 1.5rem;
@@ -114,20 +114,20 @@ button:hover {
   border-bottom: 1px solid #4c4340;
 }
 
-#clips .add {
+#clipboard .add {
   position: absolute;
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
 }
 
-#clips .clips-container {
+#clipboard .clips-container {
   overflow: auto;
   flex: 1;
   margin-top: -1px;
 }
 
-#clips .clips-container[data-scroll-type="PROGRESS"]::-webkit-scrollbar {
+#clipboard .clips-container[data-scroll-type="PROGRESS"]::-webkit-scrollbar {
   width: 0;
 }
 
@@ -137,7 +137,7 @@ button:hover {
   margin-bottom: 0;
 }
 
-#clips .clip {
+#clipboard .clip {
   padding: 0.75rem 1rem;
   border-top: 1px solid #4c4340;
   display: flex;
@@ -146,62 +146,62 @@ button:hover {
   outline: none;
 }
 
-#clips .clip[data-selected="true"] {
+#clipboard .clip[data-selected="true"] {
   background-color: #2D2D2A;
   background-color: #292926;
 }
 
-#clips .clip:focus {
+#clipboard .clip:focus {
   background-color: #413835;
 }
 
-#clips .clip .text {
+#clipboard .clip .text {
   align-self: flex-start;
   padding-right: 10px;
 }
 
-#clips .clip .info {
+#clipboard .clip .info {
   align-self: flex-end;
   display: flex;
 }
 
-#clips .clip .info * {
+#clipboard .clip .info * {
   align-self: flex-end;
 }
 
-#clips .clip pre.text {
+#clipboard .clip pre.text {
   margin: 0;
 }
 
-#clips .clip .text a,
-#clips .clip[data-filtering="true"] .text b.highlight {
+#clipboard .clip .text a,
+#clipboard .clip[data-filtering="true"] .text b.highlight {
   color:#b3897b;
 }
 
-#clips .clip .info {
+#clipboard .clip .info {
   background-color: rgba(204, 204, 204, 0.15);
   border-radius: 2px;
   padding: 0 4px 2px;
 }
 
-#clips .clip .info .app {
+#clipboard .clip .info .app {
   font-size: 14px;
   opacity: 0.9;
   white-space: nowrap;
 }
 
-#clips .clip .info .length {
+#clipboard .clip .info .length {
   font-size: 14px;
   opacity: 0.9;
 }
 
-#clips .clip .info .remove {
+#clipboard .clip .info .remove {
   margin-left: 4px;
   padding-left: 2px;
   padding-right: 2px;
 }
 
-#clips .clip[data-selected="true"] .info .remove:hover {
+#clipboard .clip[data-selected="true"] .info .remove:hover {
   color: #4c4340;
   background-color: #9C9990;
 }

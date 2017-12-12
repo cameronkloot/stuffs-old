@@ -1,5 +1,5 @@
 <template>
-  <div id="clips">
+  <div id="clipboard">
     <div class="command-container">
       <input ref="command" class="command" type="text"
         placeholder="Type here..."
@@ -39,7 +39,7 @@
 <script>
 import { ipcRenderer } from 'electron'
 import { mapActions, mapGetters } from 'vuex'
-import Clip from './Clips/Clip'
+import Clip from './Clipboard/Clip'
 
 const COMMAND_HEIGHT = 74
 const CLIP_HEIGHT = 46
@@ -57,10 +57,10 @@ const SCROLL = {
   PROGRESS: 'PROGRESS' // could disable scrollbar with this option
 }
 
-const name = 'clips'
+const name = 'clipboard'
 
 const computed = {
-  ...mapGetters('clips', [
+  ...mapGetters('clipboard', [
     'list'
   ]),
   ...mapGetters('window', [
@@ -80,7 +80,7 @@ const computed = {
 }
 
 const methods = {
-  ...mapActions('clips', [
+  ...mapActions('clipboard', [
     'add',
     'remove',
     'exalt',
@@ -208,7 +208,7 @@ const methods = {
     this.currentIndex = nextIndex
   },
   keyUp ($event) {
-    const disableQuick = false
+    const disableQuick = true
     if (this.justShown === true && $event.key === 'Meta' && disableQuick === false) {
       $event.stopPropagation()
       $event.preventDefault()

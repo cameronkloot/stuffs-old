@@ -8,7 +8,7 @@ Vue.use(Vuex)
 
 const plugins = [
   createPersistedState({
-    paths: ['clips.list']
+    paths: ['clipboard.list']
   })
 ]
 

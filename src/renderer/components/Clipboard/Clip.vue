@@ -18,7 +18,7 @@
 <script>
 import escape from 'lodash/escape'
 
-const name = 'clips_clip'
+const name = 'clipboard_clip'
 
 const props = {
   clip: {
@@ -33,7 +33,7 @@ const props = {
 
 const computed = {
   clipText () {
-    const text = escape(this.clip.text)
+    const text = escape(this.clip.text.slice(0, 100))
     if (this.command !== '') {
       return text.replace(this.command, `<b class="highlight">${this.command}</b>`)
     }

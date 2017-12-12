@@ -26,7 +26,7 @@ export default {
     return {
       routes: [
         {
-          name: 'clips',
+          name: 'clipboard',
           icon: 'paperclip',
           active: true
         }, {
