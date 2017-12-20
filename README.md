@@ -1,20 +1,14 @@
 # stuffs
 
-> A place for all your stuffs
-
-#### Build Setup
-
 ``` bash
-# install dependencies
+# install and run
 npm install
-
-# serve with hot reload at localhost:9080
 npm run dev
 
-# build electron application for production
+# build
 npm run build
 
-# lint all JS/Vue component files in `src/`
+# lint
 npm run lint
 
 ```
