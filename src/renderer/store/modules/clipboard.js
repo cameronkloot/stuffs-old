@@ -3,6 +3,8 @@ import { clipboard } from 'electron'
 
 import * as types from '../mutation-types'
 
+const MAX_CLIPS = 2000
+
 const namespaced = true
 
 const state = {
@@ -12,8 +14,10 @@ const state = {
 const mutations = {
 
   [types.ADD] (state, clip) {
-    const list = [clip, ...state.list]
-    state.list = list
+    state.list.unshift(clip)
+    if (state.list.length > MAX_CLIPS - 1) {
+      state.list.splice(MAX_CLIPS, state.list.length - MAX_CLIPS)
+    }
   },
   [types.REMOVE] (state, index) {
     state.list.splice(index, 1)
