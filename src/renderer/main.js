@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import axios from 'axios'
 
 import 'font-awesome/css/font-awesome.min.css'
 import './styles/app.css'
@@ -11,8 +10,7 @@ import store from './store'
 const debugMenu = require('debug-menu')
 debugMenu.install()
 
-if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
-Vue.http = Vue.prototype.$http = axios
+Vue.use(require('vue-electron'))
 Vue.config.productionTip = false
 
 // Prevent items from being dragged to chromium
