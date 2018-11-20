@@ -20,6 +20,8 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow = null
+let tray = null
+
 const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`
@@ -116,6 +118,15 @@ app.on('ready', () => {
 
   mainWindow.setVisibleOnAllWorkspaces(true)
   mainWindow.setFullScreenable(false)
+
+  tray = new Tray(`${__static}/iconTemplate.png`)
+  tray.on('click', () => {
+    if (mainWindow.isVisible()) {
+      hide()
+    } else {
+      show()
+    }
+  })
 
   // app.dock.show()
   // app.dock.setIcon(`${__static}/egg.png`)
