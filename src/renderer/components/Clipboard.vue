@@ -147,6 +147,10 @@ const methods = {
     this.$refs.clips[0].focus()
   },
   keyDownClip ($event, index) {
+    if ($event.metaKey && $event.code === 'KeyQ') {
+      // Quit on mac
+      return
+    }
     $event.stopPropagation()
     $event.preventDefault()
 
