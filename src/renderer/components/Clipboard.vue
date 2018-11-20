@@ -67,8 +67,9 @@ const computed = {
     'justShown'
   ]),
   filteredList () {
+    const filter = this.filter.toLowerCase()
     const filtered = this.list.filter(clip =>
-      clip.text.toLowerCase().includes(this.filter.toLowerCase())
+      `${clip.text} ${(clip.window || {}).app}`.toLowerCase().includes(filter)
     )
     if (this.mounted === true) {
       const length = Math.min(filtered.length || 1, 10)
