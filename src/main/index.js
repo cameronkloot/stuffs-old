@@ -52,10 +52,8 @@ function createWindow () {
     width: DEFAULT_WIDTH,
     frame: false,
     backgroundColor: '#2F3133',
-    alwaysOnTop: true,
     title: 'Stuffs'
   })
-
   mainWindow.loadURL(winURL)
 
   mainWindow.on('closed', () => {
@@ -105,21 +103,22 @@ ipcMain.on('open', (event, url) => {
   open(url)
 })
 
-const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
+app.requestSingleInstanceLock()
+app.on('second-instance', () => {
   if (mainWindow) {
     show()
   }
 })
 
-if (isSecondInstance) {
-  app.quit()
-}
-
 app.on('ready', () => {
   createWindow()
-  // app.dock.hide()
+  app.dock.hide()
 
-  app.dock.setIcon(`${__static}/egg.png`)
+  mainWindow.setVisibleOnAllWorkspaces(true)
+  mainWindow.setFullScreenable(false)
+
+  // app.dock.show()
+  // app.dock.setIcon(`${__static}/egg.png`)
 
   // Register a 'CommandOrControl+X' shortcut listener.
   const ret = globalShortcut.register('CommandOrControl+\\', () => {
